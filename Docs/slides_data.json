@@ -1,0 +1,145 @@
+[
+  {
+    "type": "cover",
+    "title": "HỆ THỐNG QUẢN LÝ SINH VIÊN",
+    "subtitle": "Báo cáo tiến độ dự án",
+    "meta": "Nhóm MRBEAST · TDMU · 16/05/2026"
+  },
+  {
+    "type": "content",
+    "title": "Nội dung trình bày",
+    "bullets": [
+      "Giới thiệu đề tài và phạm vi",
+      "Kiến trúc hệ thống 3 tầng",
+      "Tiến độ Client (giao diện)",
+      "Tiến độ Database (logic nghiệp vụ)",
+      "Tiến độ Server và kế hoạch",
+      "Demo và kết luận"
+    ]
+  },
+  {
+    "type": "content",
+    "title": "Giới thiệu đề tài",
+    "bullets": [
+      "Đề tài: Quản lý sinh viên (QLSV)",
+      "Công nghệ: C# WinForms + SQL Server",
+      "Mục tiêu: Quản lý SV, môn học, điểm, báo cáo xếp hạng",
+      "Phân công: Client · Server · Database",
+      "Thời gian thực hiện: khoảng 2–3 tuần"
+    ]
+  },
+  {
+    "type": "two_col",
+    "title": "Kiến trúc 3 tầng",
+    "left_title": "Client (WinForms)",
+    "left": [
+      "Đăng nhập, menu điều hướng",
+      "Quản lý sinh viên và môn học",
+      "Chi tiết điểm, báo cáo xếp hạng",
+      "Trạng thái: UI ~90%"
+    ],
+    "right_title": "Server + Database",
+    "right": [
+      "Server: API, Repository",
+      "Database: SP, Function, Trigger",
+      "SQL Server: QLSV_MRBEAST",
+      "Đang tích hợp tầng giữa"
+    ]
+  },
+  {
+    "type": "content",
+    "title": "Tiến độ Client",
+    "bullets": [
+      "frmLogin — Đăng nhập hệ thống",
+      "frmSv — Tìm kiếm, lọc lớp, thao tác hàng loạt",
+      "frmChitietSinhVien — GPA và bảng điểm",
+      "frmMonHoc — CRUD môn, đăng ký môn cho SV",
+      "frmXepHang — Top GPA, cảnh báo, học bổng"
+    ],
+    "note": "Giao diện hoàn thiện — chờ nối API Server"
+  },
+  {
+    "type": "content",
+    "title": "Database — Schema",
+    "bullets": [
+      "Bảng: SinhVien, MonHoc, LopHoc, DiemThi, TaiKhoan",
+      "Ràng buộc FK, CHECK điểm 0–10, INDEX",
+      "Dữ liệu mẫu: 20 SV, 15 môn, 5 lớp",
+      "Bổ sung: DiemTB, HocLuc trên SinhVien"
+    ]
+  },
+  {
+    "type": "two_col",
+    "title": "Database — Logic nghiệp vụ",
+    "left_title": "Procedure (9)",
+    "left": [
+      "XacThucDangNhap",
+      "LayDanhSachSinhVien, TimKiemSinhVien",
+      "ThemSinhVien, CapNhatDiem",
+      "LayBaoCaoXepHang, DemSinhVienGioi"
+    ],
+    "right_title": "Function · Trigger · View",
+    "right": [
+      "fn_TinhDiemTongKet, fn_XepLoaiHocLuc",
+      "trg_DiemThi_TinhTongKet",
+      "vw_BangXepHang, vw_BaoCaoThanhTich",
+      "TRY/CATCH + TRANSACTION"
+    ]
+  },
+  {
+    "type": "content",
+    "title": "Công thức tính điểm",
+    "bullets": [
+      "Điểm môn = QT×20% + GK×30% + CK×50%",
+      "GPA = trung bình có trọng số theo tín chỉ",
+      "Xếp loại: Xuất sắc · Giỏi · Khá · TB · Yếu",
+      "Trigger tự cập nhật khi lưu điểm"
+    ]
+  },
+  {
+    "type": "content",
+    "title": "Tiến độ Server",
+    "bullets": [
+      "Khung project Server đã có",
+      "DAL / Repository gọi stored procedure",
+      "HTTP helper + JSON Client ↔ Server",
+      "Ưu tiên: Login → Danh sách SV → Cập nhật điểm"
+    ]
+  },
+  {
+    "type": "content",
+    "title": "Kế hoạch tiếp theo",
+    "bullets": [
+      "Thêm procedure Sửa / Xóa sinh viên",
+      "Nối Server với Client",
+      "Test end-to-end trên máy nhóm",
+      "Hoàn thiện báo cáo xếp hạng trên UI"
+    ]
+  },
+  {
+    "type": "content",
+    "title": "Demo (SQL Server)",
+    "bullets": [
+      "EXEC LayBaoCaoXepHang @CheDo = 'TOP'",
+      "EXEC LayBaoCaoXepHang @CheDo = 'CANHBAO'",
+      "SELECT * FROM vw_BangXepHang",
+      "EXEC CapNhatDiem ..."
+    ],
+    "note": "Chuẩn bị sẵn database QLSV_MRBEAST trước buổi báo cáo"
+  },
+  {
+    "type": "content",
+    "title": "Kết luận",
+    "bullets": [
+      "Client: UI sẵn sàng tích hợp",
+      "Database: logic nghiệp vụ cốt lõi đã có",
+      "Server: bước tiếp theo của nhóm",
+      "Cam kết hoàn thiện luồng chính trước deadline"
+    ]
+  },
+  {
+    "type": "closing",
+    "title": "CẢM ƠN THẦY VÀ CÁC BẠN!",
+    "subtitle": "Hỏi & đáp"
+  }
+]
