@@ -1,5 +1,3 @@
 <Solution>
   <Project Path="Client/Client.csproj" Id="557fa02f-e86b-46d0-826f-b26e792909ca" />
-  <Project Path="Server/Server.csproj" />
-  <Project Path="Shared/Shared.csproj" Id="dac46c14-7f1c-4cc3-8124-537e38d76290" />
 </Solution>

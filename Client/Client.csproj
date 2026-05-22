@@ -38,6 +38,7 @@
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Data" />
     <Reference Include="System.Deployment" />
     <Reference Include="System.Drawing" />
@@ -47,12 +48,53 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Controller\MainController.cs" />
+    <Compile Include="DuLieu\DocDangKy.cs" />
+    <Compile Include="DuLieu\DocDiem.cs" />
+    <Compile Include="DuLieu\DocLop.cs" />
+    <Compile Include="DuLieu\DocMonHoc.cs" />
+    <Compile Include="DuLieu\DocSinhVien.cs" />
+    <Compile Include="DuLieu\DocTaiKhoan.cs" />
+    <Compile Include="DuLieu\DocXepHang.cs" />
+    <Compile Include="DuLieu\KetNoi.cs" />
+    <Compile Include="XuLy\XuLyDangKy.cs" />
+    <Compile Include="XuLy\XuLyDangNhap.cs" />
+    <Compile Include="XuLy\XuLyDiem.cs" />
+    <Compile Include="XuLy\XuLyLop.cs" />
+    <Compile Include="XuLy\XuLyMonHoc.cs" />
+    <Compile Include="XuLy\XuLySinhVien.cs" />
+    <Compile Include="XuLy\XuLyXepHang.cs" />
     <Compile Include="Helper\Annouce.cs" />
+    <Compile Include="Helper\CryptoHelper.cs" />
+    <Compile Include="Helper\LoiTiengViet.cs" />
+    <Compile Include="Helper\GridHelper.cs" />
+    <Compile Include="Helper\SessionContext.cs" />
+    <Compile Include="Helper\ValidationHelper.cs" />
+    <Compile Include="Models\DangKyKetQua.cs" />
+    <Compile Include="Models\KetQuaMon.cs" />
+    <Compile Include="Models\LopHoc.cs" />
+    <Compile Include="Models\MonHoc.cs" />
+    <Compile Include="Models\MonHocChon.cs" />
+    <Compile Include="Models\SinhVien.cs" />
+    <Compile Include="Models\SinhVienChon.cs" />
+    <Compile Include="Models\TaiKhoan.cs" />
+    <Compile Include="Models\XepHangItem.cs" />
     <Compile Include="View\MonHoc\Func\frmThemMonHoc.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="View\MonHoc\Func\frmThemMonHoc.Designer.cs">
       <DependentUpon>frmThemMonHoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\MonHoc\Func\frmChitietMonHoc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MonHoc\Func\frmChitietMonHoc.Designer.cs">
+      <DependentUpon>frmChitietMonHoc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="View\MonHoc\Func\frmChinhSuaMonHangLoat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\MonHoc\Func\frmChinhSuaMonHangLoat.Designer.cs">
+      <DependentUpon>frmChinhSuaMonHangLoat.cs</DependentUpon>
     </Compile>
     <Compile Include="View\SinhVien\frmChitietSinhVien.cs">
       <SubType>Form</SubType>
@@ -84,6 +126,12 @@
     <Compile Include="View\Main\frmLogin.Designer.cs">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\Main\frmDoiMatKhau.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\Main\frmDoiMatKhau.Designer.cs">
+      <DependentUpon>frmDoiMatKhau.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="View\Main\frmMain.cs">
@@ -98,6 +146,12 @@
     <Compile Include="View\SinhVien\Func\frmThemSv.Designer.cs">
       <DependentUpon>frmThemSv.cs</DependentUpon>
     </Compile>
+    <Compile Include="View\SinhVien\Func\frmChinhSuaHangLoat.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="View\SinhVien\Func\frmChinhSuaHangLoat.Designer.cs">
+      <DependentUpon>frmChinhSuaHangLoat.cs</DependentUpon>
+    </Compile>
     <Compile Include="View\XepHang\frmXepHang.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -106,6 +160,12 @@
     </Compile>
     <EmbeddedResource Include="View\MonHoc\Func\frmThemMonHoc.resx">
       <DependentUpon>frmThemMonHoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MonHoc\Func\frmChitietMonHoc.resx">
+      <DependentUpon>frmChitietMonHoc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\MonHoc\Func\frmChinhSuaMonHangLoat.resx">
+      <DependentUpon>frmChinhSuaMonHangLoat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\SinhVien\frmChitietSinhVien.resx">
       <DependentUpon>frmChitietSinhVien.cs</DependentUpon>
@@ -122,6 +182,9 @@
     <EmbeddedResource Include="View\Main\frmLogin.resx">
       <DependentUpon>frmLogin.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="View\Main\frmDoiMatKhau.resx">
+      <DependentUpon>frmDoiMatKhau.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
@@ -136,6 +199,9 @@
     </EmbeddedResource>
     <EmbeddedResource Include="View\SinhVien\Func\frmThemSv.resx">
       <DependentUpon>frmThemSv.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="View\SinhVien\Func\frmChinhSuaHangLoat.resx">
+      <DependentUpon>frmChinhSuaHangLoat.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="View\XepHang\frmXepHang.resx">
       <DependentUpon>frmXepHang.cs</DependentUpon>
@@ -152,12 +218,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\Shared\Shared.csproj">
-      <Project>{dac46c14-7f1c-4cc3-8124-537e38d76290}</Project>
-      <Name>Shared</Name>
-    </ProjectReference>
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

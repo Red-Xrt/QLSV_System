@@ -1,23 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 
 namespace Client.Controller
 {
     public static class MainController
     {
-        private static Form frmdangmo;
+        private static Form _formDangMo;
+
         public static void FrmCon(Form frmcon, string title, Panel vitri, Label tieude)
         {
-            if (frmdangmo != null)
+            if (_formDangMo != null)
             {
-                frmdangmo.Close();
+                vitri.Controls.Remove(_formDangMo);
+                _formDangMo.Dispose();
+                _formDangMo = null;
             }
 
-            frmdangmo = frmcon;
+            _formDangMo = frmcon;
             frmcon.TopLevel = false;
             frmcon.FormBorderStyle = FormBorderStyle.None;
             frmcon.Dock = DockStyle.Fill;
