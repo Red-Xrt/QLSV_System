@@ -34,6 +34,16 @@ IF OBJECT_ID(N'dbo.DoiMatKhau', N'P') IS NOT NULL DROP PROCEDURE dbo.DoiMatKhau;
 IF OBJECT_ID(N'dbo.ThemMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.ThemMonHoc;
 IF OBJECT_ID(N'dbo.DangKyMonHocChoSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.DangKyMonHocChoSinhVien;
 IF OBJECT_ID(N'dbo.LayDanhSachLop', N'P') IS NOT NULL DROP PROCEDURE dbo.LayDanhSachLop;
+IF OBJECT_ID(N'dbo.ThemLop', N'P') IS NOT NULL DROP PROCEDURE dbo.ThemLop;
+IF OBJECT_ID(N'dbo.CapNhatLop', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatLop;
+IF OBJECT_ID(N'dbo.XoaLop', N'P') IS NOT NULL DROP PROCEDURE dbo.XoaLop;
+IF OBJECT_ID(N'dbo.HuyDangKyMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.HuyDangKyMonHoc;
+IF OBJECT_ID(N'dbo.LayLichHocSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.LayLichHocSinhVien;
+IF OBJECT_ID(N'dbo.ThemLop', N'P') IS NOT NULL DROP PROCEDURE dbo.ThemLop;
+IF OBJECT_ID(N'dbo.CapNhatLop', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatLop;
+IF OBJECT_ID(N'dbo.XoaLop', N'P') IS NOT NULL DROP PROCEDURE dbo.XoaLop;
+IF OBJECT_ID(N'dbo.HuyDangKyMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.HuyDangKyMonHoc;
+IF OBJECT_ID(N'dbo.LayLichHocSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.LayLichHocSinhVien;
 IF OBJECT_ID(N'dbo.LayBaoCaoXepHang', N'P') IS NOT NULL DROP PROCEDURE dbo.LayBaoCaoXepHang;
 IF OBJECT_ID(N'dbo.ThongKeBaoCao', N'P') IS NOT NULL DROP PROCEDURE dbo.ThongKeBaoCao;
 IF OBJECT_ID(N'dbo.LayDanhSachSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.LayDanhSachSinhVien;
@@ -261,6 +271,24 @@ FROM dbo.SinhVien sv
 LEFT JOIN dbo.LopHoc l ON sv.MaLop = l.MaLop;
 GO
 
+CREATE OR ALTER VIEW dbo.vw_LichHocSinhVien
+AS
+SELECT
+    sv.MaSV,
+    sv.HoTen,
+    mh.MaMH,
+    mh.TenMH,
+    mh.ThuTrongTuan,
+    dbo.fn_ThuTrongTuanText(mh.ThuTrongTuan) AS ThuHoc,
+    CONVERT(VARCHAR(5), mh.GioBatDau, 108) + N' - ' + CONVERT(VARCHAR(5), mh.GioKetThuc, 108) AS KhungGio,
+    mh.PhongHoc,
+    mh.GiangVienPhuTrach,
+    mh.SoTinChi
+FROM dbo.DiemThi dt
+INNER JOIN dbo.SinhVien sv ON dt.MaSV = sv.MaSV
+INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH;
+GO
+
 CREATE OR ALTER VIEW dbo.vw_MonHocChiTiet
 AS
 SELECT
@@ -281,6 +309,25 @@ SELECT
         + ISNULL(N' | P.' + mh.PhongHoc, N'') AS LichHocText,
     mh.PhongHoc
 FROM dbo.MonHoc mh;
+GO
+
+CREATE OR ALTER VIEW dbo.vw_LichHocSinhVien
+AS
+SELECT
+    dt.MaSV,
+    sv.HoTen,
+    mh.MaMH,
+    mh.TenMH,
+    mh.SoTinChi,
+    mh.ThuTrongTuan,
+    dbo.fn_ThuTrongTuanText(mh.ThuTrongTuan) AS ThuHoc,
+    CONVERT(VARCHAR(5), mh.GioBatDau, 108) AS GioBatDau,
+    CONVERT(VARCHAR(5), mh.GioKetThuc, 108) AS GioKetThuc,
+    mh.PhongHoc,
+    mh.GiangVienPhuTrach
+FROM dbo.DiemThi dt
+INNER JOIN dbo.SinhVien sv ON sv.MaSV = dt.MaSV
+INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH;
 GO
 
 CREATE OR ALTER TRIGGER dbo.trg_DiemThi_TinhTongKet
@@ -726,7 +773,120 @@ CREATE OR ALTER PROCEDURE dbo.LayDanhSachLop
 AS
 BEGIN
     SET NOCOUNT ON;
-    SELECT MaLop, TenLop FROM dbo.LopHoc ORDER BY MaLop;
+    SELECT
+        l.MaLop,
+        l.TenLop,
+        SiSo = ISNULL(COUNT(sv.MaSV), 0)
+    FROM dbo.LopHoc l
+    LEFT JOIN dbo.SinhVien sv ON sv.MaLop = l.MaLop
+    GROUP BY l.MaLop, l.TenLop
+    ORDER BY l.MaLop;
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.ThemLop
+    @MaLop  VARCHAR(20),
+    @TenLop NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF EXISTS (SELECT 1 FROM dbo.LopHoc WHERE MaLop = @MaLop)
+            THROW 51030, N'Mã lớp đã tồn tại', 1;
+        INSERT INTO dbo.LopHoc (MaLop, TenLop) VALUES (@MaLop, @TenLop);
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.CapNhatLop
+    @MaLop  VARCHAR(20),
+    @TenLop NVARCHAR(100)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM dbo.LopHoc WHERE MaLop = @MaLop)
+            THROW 51031, N'Mã lớp không tồn tại', 1;
+        UPDATE dbo.LopHoc SET TenLop = @TenLop WHERE MaLop = @MaLop;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.XoaLop
+    @MaLop VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM dbo.LopHoc WHERE MaLop = @MaLop)
+            THROW 51032, N'Mã lớp không tồn tại', 1;
+        IF EXISTS (SELECT 1 FROM dbo.SinhVien WHERE MaLop = @MaLop)
+            THROW 51033, N'Không thể xóa lớp đang có sinh viên', 1;
+        DELETE FROM dbo.LopHoc WHERE MaLop = @MaLop;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.HuyDangKyMonHoc
+    @MaSV      VARCHAR(20),
+    @MaMH      VARCHAR(20),
+    @ThanhCong BIT OUTPUT,
+    @ThongBao  NVARCHAR(500) OUTPUT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SET @ThanhCong = 0;
+    SET @ThongBao = N'';
+
+    BEGIN TRY
+        IF NOT EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH)
+        BEGIN
+            SET @ThongBao = N'Sinh viên chưa đăng ký môn này';
+            RETURN;
+        END
+
+        DELETE FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH;
+        SET @ThanhCong = 1;
+        SET @ThongBao = N'Đã hủy đăng ký môn học';
+    END TRY
+    BEGIN CATCH
+        SET @ThongBao = ERROR_MESSAGE();
+    END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.LayLichHocSinhVien
+    @MaSV VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    BEGIN TRY
+        SELECT
+            MaMH,
+            TenMH,
+            SoTinChi,
+            ThuTrongTuan,
+            ThuHoc,
+            GioBatDau,
+            GioKetThuc,
+            PhongHoc,
+            GiangVienPhuTrach
+        FROM dbo.vw_LichHocSinhVien
+        WHERE MaSV = @MaSV
+        ORDER BY ThuTrongTuan, GioBatDau;
+    END TRY
+    BEGIN CATCH
+        THROW;
+    END CATCH
 END
 GO
 
