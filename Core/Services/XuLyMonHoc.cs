@@ -102,6 +102,7 @@ namespace QLSV.Core.Services
 
         private static void KiemTraMon(MonHoc mh, TimeSpan gioBatDau, TimeSpan gioKetThuc)
         {
+            if (mh == null) throw new ArgumentNullException(nameof(mh));
             if (!ValidationHelper.MaMH(mh.MaMH, out var err)) throw new ArgumentException(err);
             if (!ValidationHelper.Require(mh.TenMH, "Tên môn học", out err)) throw new ArgumentException(err);
             if (mh.SoTinChi < 1 || mh.SoTinChi > 10) throw new ArgumentException("Số tín chỉ từ 1 đến 10.");

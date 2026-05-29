@@ -132,7 +132,12 @@ GO
 INSERT INTO dbo.LopHoc (MaLop, TenLop) VALUES
 (N'D21CNTT01', N'Công nghệ thông tin K21'),
 (N'D21CNTT02', N'Công nghệ thông tin K21 - CLB'),
-(N'D22KHMT01', N'Khoa học máy tính K22');
+(N'D22KHMT01', N'Khoa học máy tính K22'),
+(N'D22CNTT03', N'Công nghệ thông tin K22 - A'),
+(N'D22CNTT04', N'Công nghệ thông tin K22 - B'),
+(N'D23KHMT02', N'Khoa học máy tính K23'),
+(N'D23HTTT01', N'Hệ thống thông tin K23'),
+(N'D23MMT01', N'Mạng máy tính K23');
 GO
 
 INSERT INTO dbo.MonHoc (MaMH, TenMH, SoTinChi, GiangVienPhuTrach, MoTaMonHoc, ThuTrongTuan, GioBatDau, GioKetThuc, PhongHoc) VALUES
@@ -140,7 +145,17 @@ INSERT INTO dbo.MonHoc (MaMH, TenMH, SoTinChi, GiangVienPhuTrach, MoTaMonHoc, Th
 (N'MH002', N'Cơ sở dữ liệu', 3, N'Trần Thị B', N'SQL Server', 3, '09:45', '11:45', N'B202'),
 (N'MH003', N'Cấu trúc dữ liệu', 4, N'Lê Văn C', N'CTDL & giải thuật', 4, '13:00', '15:30', N'C303'),
 (N'MH004', N'Mạng máy tính', 3, N'Phạm Văn D', N'TCP/IP', 5, '15:45', '17:15', N'D104'),
-(N'MH005', N'Tiếng Anh chuyên ngành', 2, N'Hoàng Thị E', N'IT English', 6, '07:30', '09:00', N'E105');
+(N'MH005', N'Tiếng Anh chuyên ngành', 2, N'Hoàng Thị E', N'IT English', 6, '07:30', '09:00', N'E105'),
+(N'MH006', N'Lập trình Java', 3, N'Ngô Văn F', N'Java Core + OOP', 2, '09:45', '11:45', N'A202'),
+(N'MH007', N'Phân tích thiết kế hệ thống', 3, N'Phan Thị G', N'UML, Use case, ERD', 3, '13:00', '15:00', N'B305'),
+(N'MH008', N'Trí tuệ nhân tạo', 3, N'Đỗ Minh H', N'AI fundamentals', 4, '15:45', '17:15', N'C402'),
+(N'MH009', N'An toàn thông tin', 3, N'Bùi Quốc I', N'Security basics', 5, '07:30', '09:30', N'D210'),
+(N'MH010', N'Kiểm thử phần mềm', 2, N'Tạ Thu K', N'Test case, automation', 6, '09:15', '11:15', N'E207'),
+(N'MH011', N'Phát triển Web', 3, N'Lý Anh L', N'ASP.NET MVC', 7, '13:00', '15:30', N'F110'),
+(N'MH012', N'Đồ án chuyên ngành', 4, N'Nguyễn Trọng M', N'Capstone project', 8, '08:00', '11:00', N'LAB01'),
+(N'MH013', N'Xử lý ảnh số', 3, N'Võ Hữu N', N'Image processing', 3, '07:30', '09:00', N'LAB02'),
+(N'MH014', N'Cloud Computing', 3, N'Nguyễn Mỹ O', N'Cloud service models', 5, '13:00', '15:00', N'G205'),
+(N'MH015', N'Kỹ năng mềm', 2, N'Trương Thanh P', N'Communication & teamwork', 7, '08:00', '09:30', N'H101');
 GO
 
 INSERT INTO dbo.SinhVien (MaSV, HoTen, NgaySinh, GioiTinh, SoDienThoai, Email, DiaChi, MaLop) VALUES
@@ -149,7 +164,21 @@ INSERT INTO dbo.SinhVien (MaSV, HoTen, NgaySinh, GioiTinh, SoDienThoai, Email, D
 (N'SV003', N'Lê Hoàng Cường', '2002-11-03', N'Nam', '0901111003', 'cuong.le@student.edu', N'TDMU', N'D21CNTT02'),
 (N'SV004', N'Phạm Thu Dung', '2003-01-15', N'Nữ', '0901111004', 'dung.pham@student.edu', N'TDMU', N'D21CNTT02'),
 (N'SV005', N'Võ Quốc Em', '2004-03-28', N'Nam', '0901111005', 'em.vo@student.edu', N'TDMU', N'D22KHMT01'),
-(N'SV006', N'Đặng Thị Phương', '2004-07-07', N'Nữ', '0901111006', 'phuong.dang@student.edu', N'TDMU', N'D22KHMT01');
+(N'SV006', N'Đặng Thị Phương', '2004-07-07', N'Nữ', '0901111006', 'phuong.dang@student.edu', N'TDMU', N'D22KHMT01'),
+(N'SV007', N'Nguyễn Thành Long', '2004-04-16', N'Nam', '0901111007', 'long.nguyen@student.edu', N'TDMU', N'D22CNTT03'),
+(N'SV008', N'Phan Gia Hân', '2004-12-09', N'Nữ', '0901111008', 'han.phan@student.edu', N'TDMU', N'D22CNTT03'),
+(N'SV009', N'Đoàn Minh Khang', '2005-02-19', N'Nam', '0901111009', 'khang.doan@student.edu', N'TDMU', N'D22CNTT04'),
+(N'SV010', N'Lưu Bảo Ngọc', '2005-06-22', N'Nữ', '0901111010', 'ngoc.luu@student.edu', N'TDMU', N'D22CNTT04'),
+(N'SV011', N'Trịnh Tuấn Kiệt', '2005-09-30', N'Nam', '0901111011', 'kiet.trinh@student.edu', N'TDMU', N'D23KHMT02'),
+(N'SV012', N'Huỳnh Diễm My', '2005-11-14', N'Nữ', '0901111012', 'my.huynh@student.edu', N'TDMU', N'D23KHMT02'),
+(N'SV013', N'Đinh Nhật Quang', '2004-01-08', N'Nam', '0901111013', 'quang.dinh@student.edu', N'TDMU', N'D23HTTT01'),
+(N'SV014', N'Tạ Khánh Linh', '2004-10-03', N'Nữ', '0901111014', 'linh.ta@student.edu', N'TDMU', N'D23HTTT01'),
+(N'SV015', N'Bùi Hải Đăng', '2003-12-01', N'Nam', '0901111015', 'dang.bui@student.edu', N'TDMU', N'D23MMT01'),
+(N'SV016', N'Ngô Bảo Trâm', '2005-03-11', N'Nữ', '0901111016', 'tram.ngo@student.edu', N'TDMU', N'D23MMT01'),
+(N'SV017', N'Phạm Đức Tài', '2003-07-25', N'Nam', '0901111017', 'tai.pham@student.edu', N'TDMU', N'D21CNTT01'),
+(N'SV018', N'Lê Thảo Nhi', '2004-08-18', N'Nữ', '0901111018', 'nhi.le@student.edu', N'TDMU', N'D22KHMT01'),
+(N'SV019', N'Vũ Quốc Bảo', '2005-05-05', N'Nam', '0901111019', 'bao.vu@student.edu', N'TDMU', N'D22CNTT03'),
+(N'SV020', N'Hoàng Minh Châu', '2005-01-27', N'Nữ', '0901111020', 'chau.hoang@student.edu', N'TDMU', N'D23HTTT01');
 GO
 
 /* SV001: MH001 + MH002; SV002: MH001 + MH003 (trùng Thứ 2 7:30-9:30 với MH001 nếu đăng ký thêm MH khác cùng giờ) */
@@ -159,7 +188,43 @@ INSERT INTO dbo.DiemThi (MaSV, MaMH, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi) VALUE
 (N'SV002', N'MH001', 9, 9, 10),
 (N'SV002', N'MH003', 6, 7, 7),
 (N'SV003', N'MH004', 5, 6, 6),
-(N'SV005', N'MH005', 8, 8, 9);
+(N'SV005', N'MH005', 8, 8, 9),
+(N'SV006', N'MH006', 4, 5, 5),
+(N'SV006', N'MH010', 6, 7, 7),
+(N'SV007', N'MH001', 10, 9, 10),
+(N'SV007', N'MH007', 9, 8, 9),
+(N'SV007', N'MH011', 8, 8, 9),
+(N'SV008', N'MH002', 8, 7, 8),
+(N'SV008', N'MH008', 9, 9, 8),
+(N'SV008', N'MH012', NULL, NULL, NULL),
+(N'SV009', N'MH003', 3, 4, 4),
+(N'SV009', N'MH009', 5, 4, 5),
+(N'SV010', N'MH004', 7, 6, 7),
+(N'SV010', N'MH013', 8, 9, 8),
+(N'SV010', N'MH015', 10, 10, 10),
+(N'SV011', N'MH005', 2, 3, 4),
+(N'SV011', N'MH014', 5, 5, 5),
+(N'SV012', N'MH006', 7, 8, 9),
+(N'SV012', N'MH010', 8, 8, 8),
+(N'SV013', N'MH007', 6, 6, 7),
+(N'SV013', N'MH011', 7, 7, 7),
+(N'SV013', N'MH014', 6, 5, 6),
+(N'SV014', N'MH008', 9, 9, 9),
+(N'SV014', N'MH012', 8, 9, 9),
+(N'SV015', N'MH009', 4, 4, 3),
+(N'SV015', N'MH013', 5, 6, 5),
+(N'SV016', N'MH010', 9, 8, 10),
+(N'SV016', N'MH015', 7, 8, 8),
+(N'SV017', N'MH001', 6, 6, 6),
+(N'SV017', N'MH003', 5, 6, 5),
+(N'SV017', N'MH014', 6, 7, 6),
+(N'SV018', N'MH002', 9, 10, 10),
+(N'SV018', N'MH005', 8, 9, 9),
+(N'SV019', N'MH006', 5, 5, 4),
+(N'SV019', N'MH011', 6, 5, 6),
+(N'SV020', N'MH007', 10, 9, 10),
+(N'SV020', N'MH012', 9, 9, 10),
+(N'SV020', N'MH015', 8, 8, 9);
 GO
 
 /* Hash tên đăng nhập: SHA-256 UTF-8 chữ thường (CryptoHelper.HashUsername). Mật khẩu: PBKDF2. UI: admin/123456, giaovu/123456 */

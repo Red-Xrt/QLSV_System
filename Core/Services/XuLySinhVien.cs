@@ -80,6 +80,7 @@ namespace QLSV.Core.Services
 
         private static void KiemTra(SinhVien sv)
         {
+            if (sv == null) throw new ArgumentNullException(nameof(sv));
             if (!ValidationHelper.MaSV(sv.MaSV, out var err)) throw new ArgumentException(err);
             if (!ValidationHelper.Require(sv.HoTen, "Họ tên", out err)) throw new ArgumentException(err);
             if (!ValidationHelper.Require(sv.MaLop, "Lớp học", out err)) throw new ArgumentException(err);

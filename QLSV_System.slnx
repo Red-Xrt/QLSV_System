@@ -3,4 +3,7 @@
   <Project Path="Application/QLSV.App.csproj" Id="557fa02f-e86b-46d0-826f-b26e792909ca">
     <BuildDependency Project="Core/QLSV.Core.csproj" />
   </Project>
+  <Project Path="Tests/QLSV.Core.Tests.csproj" Id="f4a0b40b-1d44-437d-a5a5-4a5a6bce8b7d">
+    <BuildDependency Project="Core/QLSV.Core.csproj" />
+  </Project>
 </Solution>

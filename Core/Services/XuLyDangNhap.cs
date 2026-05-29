@@ -49,8 +49,9 @@ namespace QLSV.Core.Services
             if (!CryptoHelper.VerifyPassword(matKhauCu, user.MatKhauHash))
                 throw new ArgumentException("Mật khẩu cũ không đúng.");
 
-            _db.DoiMatKhau(user.TenDangNhapHash, CryptoHelper.HashPassword(matKhauMoi));
-            user.MatKhauHash = CryptoHelper.HashPassword(matKhauMoi);
+            var newPasswordHash = CryptoHelper.HashPassword(matKhauMoi);
+            _db.DoiMatKhau(user.TenDangNhapHash, newPasswordHash);
+            user.MatKhauHash = newPasswordHash;
         }
     }
 }
