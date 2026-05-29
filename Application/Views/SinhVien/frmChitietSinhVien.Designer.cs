@@ -15,6 +15,7 @@ namespace QLSV.App.Views
         
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.pnlTop = new System.Windows.Forms.Panel();
             this.lblTitle = new System.Windows.Forms.Label();
             this.pnlLeft = new System.Windows.Forms.Panel();
@@ -35,15 +36,23 @@ namespace QLSV.App.Views
             this.dgvDiemThi = new System.Windows.Forms.DataGridView();
             this.colMaMH = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTenMH = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colHocKy = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colTinChi = new System.Windows.Forms.DataGridViewTextBoxColumn();
-            this.colDiem = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colQuaTrinh = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colGiuaKi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colCuoiKi = new System.Windows.Forms.DataGridViewTextBoxColumn();
+            this.colTongKet = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.colChiTiet = new System.Windows.Forms.DataGridViewButtonColumn();
             this.colHuyDangKy = new System.Windows.Forms.DataGridViewButtonColumn();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            this.themMonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            this.xoaMonToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.pnlTop.SuspendLayout();
             this.pnlLeft.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).BeginInit();
             this.pnlRight.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDiemThi)).BeginInit();
+            this.contextMenuStrip1.SuspendLayout();
             this.SuspendLayout();
             // 
             // pnlTop
@@ -100,7 +109,7 @@ namespace QLSV.App.Views
             this.btnLichTuan.Name = "btnLichTuan";
             this.btnLichTuan.Size = new System.Drawing.Size(264, 36);
             this.btnLichTuan.TabIndex = 12;
-            this.btnLichTuan.Text = "📅 LỊCH HỌC TUẦN";
+            this.btnLichTuan.Text = "LỊCH HỌC TUẦN";
             this.btnLichTuan.UseVisualStyleBackColor = false;
             this.btnLichTuan.Click += new System.EventHandler(this.btnLichTuan_Click);
             // 
@@ -115,7 +124,7 @@ namespace QLSV.App.Views
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(264, 40);
             this.btnLuu.TabIndex = 0;
-            this.btnLuu.Text = "💾 LƯU THAY ĐỔI";
+            this.btnLuu.Text = "LƯU THAY ĐỔI";
             this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
@@ -245,10 +254,15 @@ namespace QLSV.App.Views
             this.dgvDiemThi.Columns.AddRange(new System.Windows.Forms.DataGridViewColumn[] {
             this.colMaMH,
             this.colTenMH,
+            this.colHocKy,
             this.colTinChi,
-            this.colDiem,
+            this.colQuaTrinh,
+            this.colGiuaKi,
+            this.colCuoiKi,
+            this.colTongKet,
             this.colChiTiet,
             this.colHuyDangKy});
+            this.dgvDiemThi.ContextMenuStrip = this.contextMenuStrip1;
             this.dgvDiemThi.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dgvDiemThi.Location = new System.Drawing.Point(10, 10);
             this.dgvDiemThi.Name = "dgvDiemThi";
@@ -276,20 +290,53 @@ namespace QLSV.App.Views
             this.colTenMH.Name = "colTenMH";
             this.colTenMH.ReadOnly = true;
             // 
+            // colHocKy
+            // 
+            this.colHocKy.HeaderText = "Học kỳ";
+            this.colHocKy.MinimumWidth = 6;
+            this.colHocKy.Name = "colHocKy";
+            this.colHocKy.ReadOnly = true;
+            this.colHocKy.Width = 95;
+            // 
             // colTinChi
             // 
-            this.colTinChi.HeaderText = "Tín Chỉ";
+            this.colTinChi.HeaderText = "TC";
             this.colTinChi.MinimumWidth = 6;
             this.colTinChi.Name = "colTinChi";
             this.colTinChi.ReadOnly = true;
-            this.colTinChi.Width = 80;
+            this.colTinChi.Width = 45;
             // 
-            // colDiem
+            // colQuaTrinh
             // 
-            this.colDiem.HeaderText = "Điểm Thi";
-            this.colDiem.MinimumWidth = 6;
-            this.colDiem.Name = "colDiem";
-            this.colDiem.Width = 125;
+            this.colQuaTrinh.HeaderText = "QT (20%)";
+            this.colQuaTrinh.MinimumWidth = 6;
+            this.colQuaTrinh.Name = "colQuaTrinh";
+            this.colQuaTrinh.ReadOnly = true;
+            this.colQuaTrinh.Width = 72;
+            // 
+            // colGiuaKi
+            // 
+            this.colGiuaKi.HeaderText = "Giữa (30%)";
+            this.colGiuaKi.MinimumWidth = 6;
+            this.colGiuaKi.Name = "colGiuaKi";
+            this.colGiuaKi.ReadOnly = true;
+            this.colGiuaKi.Width = 72;
+            // 
+            // colCuoiKi
+            // 
+            this.colCuoiKi.HeaderText = "Thi CK (50%)";
+            this.colCuoiKi.MinimumWidth = 6;
+            this.colCuoiKi.Name = "colCuoiKi";
+            this.colCuoiKi.ReadOnly = true;
+            this.colCuoiKi.Width = 82;
+            // 
+            // colTongKet
+            // 
+            this.colTongKet.HeaderText = "Tổng kết";
+            this.colTongKet.MinimumWidth = 6;
+            this.colTongKet.Name = "colTongKet";
+            this.colTongKet.ReadOnly = true;
+            this.colTongKet.Width = 65;
             // 
             // colChiTiet
             // 
@@ -313,6 +360,30 @@ namespace QLSV.App.Views
             this.colHuyDangKy.UseColumnTextForButtonValue = true;
             this.colHuyDangKy.Width = 70;
             // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
+            this.themMonToolStripMenuItem,
+            this.xoaMonToolStripMenuItem});
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(211, 56);
+            this.contextMenuStrip1.Opening += new System.ComponentModel.CancelEventHandler(this.contextMenuStrip1_Opening);
+            // 
+            // themMonToolStripMenuItem
+            // 
+            this.themMonToolStripMenuItem.Name = "themMonToolStripMenuItem";
+            this.themMonToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.themMonToolStripMenuItem.Text = "Thêm môn (đăng ký)";
+            this.themMonToolStripMenuItem.Click += new System.EventHandler(this.themMonToolStripMenuItem_Click);
+            // 
+            // xoaMonToolStripMenuItem
+            // 
+            this.xoaMonToolStripMenuItem.Name = "xoaMonToolStripMenuItem";
+            this.xoaMonToolStripMenuItem.Size = new System.Drawing.Size(210, 24);
+            this.xoaMonToolStripMenuItem.Text = "Xóa môn (hủy đăng ký)";
+            this.xoaMonToolStripMenuItem.Click += new System.EventHandler(this.xoaMonToolStripMenuItem_Click);
+            // 
             // frmChitietSinhVien
             // 
             this.BackColor = System.Drawing.Color.White;
@@ -325,8 +396,8 @@ namespace QLSV.App.Views
             this.Name = "frmChitietSinhVien";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Chi Tiết Sinh Viên";
-            this.Load += new System.EventHandler(this.frmChitietSinhVien_Load);
             this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.frmChitietSinhVien_FormClosing);
+            this.Load += new System.EventHandler(this.frmChitietSinhVien_Load);
             this.pnlTop.ResumeLayout(false);
             this.pnlTop.PerformLayout();
             this.pnlLeft.ResumeLayout(false);
@@ -334,6 +405,7 @@ namespace QLSV.App.Views
             ((System.ComponentModel.ISupportInitialize)(this.picAvatar)).EndInit();
             this.pnlRight.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvDiemThi)).EndInit();
+            this.contextMenuStrip1.ResumeLayout(false);
             this.ResumeLayout(false);
 
         }
@@ -358,9 +430,16 @@ namespace QLSV.App.Views
         private System.Windows.Forms.DataGridView dgvDiemThi;
         private System.Windows.Forms.DataGridViewTextBoxColumn colMaMH;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTenMH;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colHocKy;
         private System.Windows.Forms.DataGridViewTextBoxColumn colTinChi;
-        private System.Windows.Forms.DataGridViewTextBoxColumn colDiem;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colQuaTrinh;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colGiuaKi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colCuoiKi;
+        private System.Windows.Forms.DataGridViewTextBoxColumn colTongKet;
         private System.Windows.Forms.DataGridViewButtonColumn colChiTiet;
         private System.Windows.Forms.DataGridViewButtonColumn colHuyDangKy;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
+        private System.Windows.Forms.ToolStripMenuItem themMonToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem xoaMonToolStripMenuItem;
     }
 }

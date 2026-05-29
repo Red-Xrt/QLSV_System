@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.Core.Services;
 using QLSV.App.Helpers;
 using QLSV.Core.Models;
@@ -15,7 +14,7 @@ namespace QLSV.App.Views
         private readonly string _tenMon;
         private readonly KetQuaMon _kqGoc;
         private readonly XuLyDiem _bll = new XuLyDiem();
-        private bool _choPhepSua = true;
+        private bool _choPhepSua;
 
         public frmChitietDiem(string maSv, string maMh, string tenMon, KetQuaMon kq)
         {
@@ -47,7 +46,14 @@ namespace QLSV.App.Views
             try
             {
                 var status = _bll.LayTrangThaiSua(_maSv, _maMh);
-                if (status == null) return;
+                if (status == null)
+                {
+                    _choPhepSua = false;
+                    txtDiemQuaTrinh.ReadOnly = txtDiemGiuaKi.ReadOnly = txtDiemThi.ReadOnly = true;
+                    btnLuu.Enabled = false;
+                    lblTrangThaiSua.Text = "Không xác định trạng thái sửa điểm.";
+                    return;
+                }
 
                 _choPhepSua = status.CoTheSua;
                 if (status.NamHoc > 0 && status.HocKy > 0)
@@ -72,7 +78,10 @@ namespace QLSV.App.Views
             }
             catch (Exception ex)
             {
-                lblTrangThaiSua.Text = "Không xác định được trạng thái khóa điểm: " + KetNoi.BaoLoi(ex);
+                _choPhepSua = false;
+                txtDiemQuaTrinh.ReadOnly = txtDiemGiuaKi.ReadOnly = txtDiemThi.ReadOnly = true;
+                btnLuu.Enabled = false;
+                lblTrangThaiSua.Text = "Không xác định được trạng thái khóa điểm: " + Announce.ErrorText(ex);
             }
         }
 
@@ -107,7 +116,7 @@ namespace QLSV.App.Views
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnDong_Click(object sender, EventArgs e)

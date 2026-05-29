@@ -32,6 +32,23 @@ namespace QLSV.Core.Tests
         }
 
         [TestMethod]
+        public void KetQuaMon_DaCoDiem_OnlyComponentScores()
+        {
+            var kq = new KetQuaMon { TongKet = 0m };
+            Assert.IsFalse(kq.DaCoDiem());
+            kq.DiemCuoiKi = 7;
+            Assert.IsTrue(kq.DaCoDiem());
+        }
+
+        [TestMethod]
+        public void XuLySinhVien_LayDiem_WithInvalidMaSV_Throws()
+        {
+            var svc = new XuLySinhVien();
+            var ex = Catch<ArgumentException>(() => svc.LayDiem("bad-id"));
+            StringAssert.Contains(ex.Message, "Mã sinh viên");
+        }
+
+        [TestMethod]
         public void XuLyDangKy_DangKyHangLoat_WithNullList_Throws()
         {
             var svc = new XuLyDangKy();

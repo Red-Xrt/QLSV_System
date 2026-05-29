@@ -19,9 +19,27 @@ namespace QLSV.Core.Services
             return _db.LayThongTin(maSv.Trim());
         }
 
-        public List<KetQuaMon> LayDiem(string maSv) => _db.LayDiem(maSv?.Trim());
+        public List<KetQuaMon> LayDiem(string maSv)
+        {
+            if (!ValidationHelper.MaSV(maSv, out var err)) throw new ArgumentException(err);
+            return _db.LayDiem(maSv.Trim());
+        }
 
-        public void Them(SinhVien sv) { KiemTra(sv); _db.Them(sv); }
+        public string LayMaSvTiepTheo()
+        {
+            var ma = _db.LayMaSvTiepTheo();
+            if (string.IsNullOrWhiteSpace(ma))
+                throw new InvalidOperationException("Không tạo được mã sinh viên mới.");
+            return ma;
+        }
+        public string Them(SinhVien sv)
+        {
+            if (sv == null) throw new ArgumentNullException(nameof(sv));
+            sv.MaSV = LayMaSvTiepTheo();
+            KiemTra(sv);
+            _db.Them(sv);
+            return sv.MaSV;
+        }
         public void CapNhat(SinhVien sv) { KiemTra(sv); _db.CapNhat(sv); }
 
         public void Xoa(string maSv)
@@ -45,6 +63,8 @@ namespace QLSV.Core.Services
 
             if (doiLop && !ValidationHelper.Require(maLopMoi, "Lớp học", out var errLop))
                 throw new ArgumentException(errLop);
+            if (doiGioiTinh && !ValidationHelper.Require(gioiTinhMoi, "Giới tính", out var errGt))
+                throw new ArgumentException(errGt);
 
             var ketQua = new List<DangKyKetQua>();
             foreach (var ma in danhSachMa.Distinct(StringComparer.OrdinalIgnoreCase))
@@ -71,7 +91,7 @@ namespace QLSV.Core.Services
                 catch (Exception ex)
                 {
                     item.ThanhCong = false;
-                    item.ThongBao = ex is ArgumentException ? ex.Message : KetNoi.BaoLoi(ex);
+                    item.ThongBao = Err.GiaiThich(ex);
                 }
                 ketQua.Add(item);
             }
@@ -82,6 +102,9 @@ namespace QLSV.Core.Services
         {
             if (sv == null) throw new ArgumentNullException(nameof(sv));
             if (!ValidationHelper.MaSV(sv.MaSV, out var err)) throw new ArgumentException(err);
+            sv.MaSV = sv.MaSV?.Trim();
+            sv.HoTen = sv.HoTen?.Trim();
+            sv.MaLop = sv.MaLop?.Trim();
             if (!ValidationHelper.Require(sv.HoTen, "Họ tên", out err)) throw new ArgumentException(err);
             if (!ValidationHelper.Require(sv.MaLop, "Lớp học", out err)) throw new ArgumentException(err);
             if (!ValidationHelper.Email(sv.Email, out err)) throw new ArgumentException(err);

@@ -16,6 +16,14 @@ namespace QLSV.Core.Services
             if (!ValidationHelper.Diem(qt, out err)) throw new ArgumentException(err);
             if (!ValidationHelper.Diem(gk, out err)) throw new ArgumentException(err);
             if (!ValidationHelper.Diem(ck, out err)) throw new ArgumentException(err);
+
+            var status = _db.LayTrangThaiSua(maSv.Trim(), maMh.Trim());
+            if (status == null || !status.CoTheSua)
+            {
+                var msg = status?.ThongBao ?? "Không xác định trạng thái sửa điểm.";
+                throw new InvalidOperationException(msg);
+            }
+
             _db.CapNhat(maSv.Trim(), maMh.Trim(), qt, gk, ck);
         }
 

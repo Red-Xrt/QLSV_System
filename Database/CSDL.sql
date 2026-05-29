@@ -20,12 +20,14 @@ GO
 
 IF OBJECT_ID(N'dbo.LayTaiKhoanDangNhap', N'P') IS NOT NULL DROP PROCEDURE dbo.LayTaiKhoanDangNhap;
 IF OBJECT_ID(N'dbo.TimKiemSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.TimKiemSinhVien;
+IF OBJECT_ID(N'dbo.LayMaSvTiepTheo', N'P') IS NOT NULL DROP PROCEDURE dbo.LayMaSvTiepTheo;
 IF OBJECT_ID(N'dbo.ThemSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.ThemSinhVien;
 IF OBJECT_ID(N'dbo.CapNhatSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatSinhVien;
 IF OBJECT_ID(N'dbo.XoaSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.XoaSinhVien;
 IF OBJECT_ID(N'dbo.ThongTinSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.ThongTinSinhVien;
 IF OBJECT_ID(N'dbo.ChiTietSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.ChiTietSinhVien;
 IF OBJECT_ID(N'dbo.CapNhatDiem', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatDiem;
+IF OBJECT_ID(N'dbo.DongBoDiemGPA', N'P') IS NOT NULL DROP PROCEDURE dbo.DongBoDiemGPA;
 IF OBJECT_ID(N'dbo.LayDanhSachMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.LayDanhSachMonHoc;
 IF OBJECT_ID(N'dbo.ChiTietMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.ChiTietMonHoc;
 IF OBJECT_ID(N'dbo.CapNhatMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatMonHoc;
@@ -498,6 +500,24 @@ BEGIN
     BEGIN CATCH
         THROW;
     END CATCH
+END
+GO
+
+/* Mã SV dạng SV001, SV002... lấy số lớn nhất (hậu tố số) + 1 */
+CREATE OR ALTER PROCEDURE dbo.LayMaSvTiepTheo
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @MaxNum INT;
+    SELECT @MaxNum = MAX(TRY_CAST(SUBSTRING(MaSV, 3, LEN(MaSV) - 2) AS INT))
+    FROM dbo.SinhVien
+    WHERE LEN(MaSV) >= 4
+      AND UPPER(LEFT(MaSV, 2)) = N'SV'
+      AND SUBSTRING(MaSV, 3, LEN(MaSV) - 2) NOT LIKE '%[^0-9]%';
+
+    DECLARE @Next INT = ISNULL(@MaxNum, 0) + 1;
+    SELECT CAST(N'SV' + RIGHT(REPLICATE(N'0', 3) + CAST(@Next AS NVARCHAR(10)), 3) AS VARCHAR(20)) AS MaSV;
 END
 GO
 
@@ -1081,7 +1101,17 @@ BEGIN
 
         IF NOT EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt)
         BEGIN
-            SET @ThongBao = N'Sinh viên chưa đăng ký môn này';
+            SET @ThongBao = N'Sinh viên chưa đăng ký môn này ở học kỳ hiện tại';
+            RETURN;
+        END
+
+        IF EXISTS (
+            SELECT 1 FROM dbo.DiemThi
+            WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt
+              AND (DiemQuaTrinh IS NOT NULL OR DiemGiuaKi IS NOT NULL OR DiemCuoiKi IS NOT NULL OR TongKet IS NOT NULL)
+        )
+        BEGIN
+            SET @ThongBao = N'Môn đã có điểm, không thể hủy đăng ký.';
             RETURN;
         END
 
@@ -1191,6 +1221,47 @@ BEGIN
 END
 GO
 
+/*
+  Đồng bộ TongKet + GPA sau seed.
+  (Dữ liệu INSERT vào DiemThi trước khi tạo trigger nên TongKet/DiemTB ban đầu thường NULL.)
+*/
+CREATE OR ALTER PROCEDURE dbo.DongBoDiemGPA
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    UPDATE dbo.DiemThi
+    SET TongKet = dbo.fn_TinhDiemTongKet(DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi);
+
+    ;WITH DiemTB AS (
+        SELECT
+            dt.MaSV,
+            DiemTB = ROUND(SUM(dt.TongKet * mh.SoTinChi) * 1.0 / NULLIF(SUM(mh.SoTinChi), 0), 2)
+        FROM dbo.DiemThi dt
+        INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH
+        WHERE dt.TongKet IS NOT NULL
+        GROUP BY dt.MaSV
+    )
+    UPDATE sv
+    SET
+        DiemTB = d.DiemTB,
+        HocLuc = dbo.fn_XepLoaiHocLuc(d.DiemTB)
+    FROM dbo.SinhVien sv
+    INNER JOIN DiemTB d ON sv.MaSV = d.MaSV;
+
+    UPDATE sv
+    SET DiemTB = NULL, HocLuc = NULL
+    FROM dbo.SinhVien sv
+    WHERE NOT EXISTS (
+        SELECT 1 FROM dbo.DiemThi dt
+        WHERE dt.MaSV = sv.MaSV AND dt.TongKet IS NOT NULL
+    );
+END
+GO
+
+EXEC dbo.DongBoDiemGPA;
+GO
+
 /* Kiểm tra trigger sau khi chạy script */
 IF OBJECT_ID(N'dbo.trg_DiemThi_TinhTongKet', N'TR') IS NULL
     RAISERROR(N'THIEU trigger dbo.trg_DiemThi_TinhTongKet — chay lai toan bo CSDL.sql.', 16, 1);
@@ -1199,6 +1270,7 @@ IF OBJECT_ID(N'dbo.trg_MonHoc_ValidateLich', N'TR') IS NULL
 
 PRINT N'CSDL QLSV_MRBEAST: Tao va cap nhat thanh cong.';
 PRINT N'Trigger: trg_DiemThi_TinhTongKet, trg_MonHoc_ValidateLich';
+PRINT N'Da dong bo TongKet + GPA (proc DongBoDiemGPA).';
 GO
 
 

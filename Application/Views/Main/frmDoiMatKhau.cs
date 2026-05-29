@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.App.Helpers;
 using QLSV.Core.Services;
 
@@ -24,7 +23,7 @@ namespace QLSV.App.Views
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnHuy_Click(object sender, EventArgs e)

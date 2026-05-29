@@ -61,6 +61,10 @@ namespace QLSV.Core.Services
                 if (!ValidationHelper.GioHoc(gioBatDau.Value, gioKetThuc.Value, out var errGio))
                     throw new ArgumentException(errGio);
             }
+            if (doiPhong && !ValidationHelper.Require(phongHoc, "Phòng học", out var errPhong))
+                throw new ArgumentException(errPhong);
+            if (doiGiangVien && !ValidationHelper.Require(giangVien, "Giảng viên", out var errGv))
+                throw new ArgumentException(errGv);
 
             var ketQua = new List<DangKyKetQua>();
             foreach (var ma in danhSachMa.Distinct(StringComparer.OrdinalIgnoreCase))
@@ -93,7 +97,7 @@ namespace QLSV.Core.Services
                 catch (Exception ex)
                 {
                     item.ThanhCong = false;
-                    item.ThongBao = ex is ArgumentException ? ex.Message : KetNoi.BaoLoi(ex);
+                    item.ThongBao = Err.GiaiThich(ex);
                 }
                 ketQua.Add(item);
             }
@@ -103,6 +107,10 @@ namespace QLSV.Core.Services
         private static void KiemTraMon(MonHoc mh, TimeSpan gioBatDau, TimeSpan gioKetThuc)
         {
             if (mh == null) throw new ArgumentNullException(nameof(mh));
+            mh.MaMH = mh.MaMH?.Trim();
+            mh.TenMH = mh.TenMH?.Trim();
+            mh.PhongHoc = mh.PhongHoc?.Trim();
+            mh.GiangVienPhuTrach = mh.GiangVienPhuTrach?.Trim();
             if (!ValidationHelper.MaMH(mh.MaMH, out var err)) throw new ArgumentException(err);
             if (!ValidationHelper.Require(mh.TenMH, "Tên môn học", out err)) throw new ArgumentException(err);
             if (mh.SoTinChi < 1 || mh.SoTinChi > 10) throw new ArgumentException("Số tín chỉ từ 1 đến 10.");
@@ -113,7 +121,7 @@ namespace QLSV.Core.Services
         private static TimeSpan ParseGio(string gio)
         {
             if (TimeSpan.TryParse(gio, out var t)) return t;
-            return TimeSpan.FromHours(7);
+            throw new ArgumentException("Giờ học không hợp lệ: " + (gio ?? "(trống)"));
         }
     }
 }

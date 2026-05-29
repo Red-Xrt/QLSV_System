@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.Core.Services;
 using QLSV.App.Helpers;
 using QLSV.Core.Models;
@@ -39,7 +38,7 @@ namespace QLSV.App.Views
                 cboLocLop.ValueMember = "MaLop";
                 cboLocLop.SelectedIndex = 0;
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void NapDuLieu()
@@ -55,7 +54,7 @@ namespace QLSV.App.Views
                 }
                 CapNhatDem();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void CapNhatDem()
@@ -120,7 +119,7 @@ namespace QLSV.App.Views
                 Announce.Success("Đã xóa sinh viên.");
                 NapDuLieu();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void contextMenuStrip1_Opening(object sender, System.ComponentModel.CancelEventArgs e)

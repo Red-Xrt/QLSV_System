@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.Core.Services;
 using QLSV.App.Helpers;
 using QLSV.App.Views;
@@ -33,7 +32,7 @@ namespace QLSV.App
             }
             catch (Exception ex)
             {
-                textError.Text = KetNoi.BaoLoi(ex);
+                textError.Text = Announce.ErrorText(ex);
             }
         }
 

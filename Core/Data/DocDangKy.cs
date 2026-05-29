@@ -23,6 +23,7 @@ namespace QLSV.Core.Data
                 return new DangKyKetQua
                 {
                     MaSV = maSv,
+                    MaMH = maMh,
                     ThanhCong = pOk.Value != null && pOk.Value != DBNull.Value && (bool)pOk.Value,
                     ThongBao = pMsg.Value?.ToString()
                 };
@@ -45,6 +46,7 @@ namespace QLSV.Core.Data
                 return new DangKyKetQua
                 {
                     MaSV = maSv,
+                    MaMH = maMh,
                     ThanhCong = pOk.Value != null && pOk.Value != DBNull.Value && (bool)pOk.Value,
                     ThongBao = pMsg.Value?.ToString()
                 };

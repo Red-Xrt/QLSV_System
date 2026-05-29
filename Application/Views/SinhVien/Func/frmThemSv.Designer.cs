@@ -220,8 +220,10 @@ namespace QLSV.App.Views
             this.txtMaSV.Location = new System.Drawing.Point(187, 52);
             this.txtMaSV.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.txtMaSV.Name = "txtMaSV";
+            this.txtMaSV.ReadOnly = true;
             this.txtMaSV.Size = new System.Drawing.Size(305, 32);
             this.txtMaSV.TabIndex = 8;
+            this.txtMaSV.TabStop = false;
             // 
             // label1
             // 
@@ -232,7 +234,7 @@ namespace QLSV.App.Views
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(137, 23);
             this.label1.TabIndex = 9;
-            this.label1.Text = "Mã Sinh Viên (*):";
+            this.label1.Text = "Mã SV (tự động):";
             // 
             // grpAnh
             // 

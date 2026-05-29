@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using QLSV.Core.Data;
 using QLSV.Core.Helpers;
 using QLSV.Core.Models;
@@ -9,6 +10,15 @@ namespace QLSV.Core.Services
     public class XuLyDangKy
     {
         private readonly DocDangKy _db = new DocDangKy();
+        private readonly DocHocKy _hocKyDb = new DocHocKy();
+
+        public HocKyHienTai LayHocKyHienTai() => _hocKyDb.LayHienTai();
+
+        public DangKyKetQua DangKyMot(string maSv, string maMh)
+        {
+            var ds = DangKyHangLoat(maMh, new[] { maSv });
+            return ds.FirstOrDefault() ?? new DangKyKetQua { MaSV = maSv, MaMH = maMh, ThanhCong = false, ThongBao = "Không có kết quả đăng ký." };
+        }
 
         public List<DangKyKetQua> DangKyHangLoat(string maMh, IEnumerable<string> dsMaSv)
         {
@@ -31,17 +41,23 @@ namespace QLSV.Core.Services
                     }
                     else
                     {
-                        item = _db.DangKy(maSv, maMh.Trim());
+                        var kq = _db.DangKy(maSv, maMh.Trim());
+                        item.ThanhCong = kq.ThanhCong;
+                        item.ThongBao = kq.ThongBao;
                     }
                 }
                 catch (Exception ex)
                 {
                     item.ThanhCong = false;
-                    item.ThongBao = KetNoi.BaoLoi(ex);
+                    item.ThongBao = Err.GiaiThich(ex);
                 }
 
                 ketQua.Add(item);
             }
+
+            if (ketQua.Count == 0)
+                throw new ArgumentException("Danh sách sinh viên không hợp lệ (toàn mã trống).");
+
             return ketQua;
         }
 

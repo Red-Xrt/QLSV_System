@@ -36,6 +36,17 @@ namespace QLSV.Core.Data
             return null;
         }
 
+        public string LayMaSvTiepTheo()
+        {
+            using (var conn = KetNoi.MoKetNoi())
+            using (var cmd = KetNoi.TaoLenh("dbo.LayMaSvTiepTheo", conn))
+            {
+                conn.Open();
+                var result = cmd.ExecuteScalar();
+                return result?.ToString()?.Trim();
+            }
+        }
+
         public void Them(SinhVien sv) => ExecSv("dbo.ThemSinhVien", sv);
         public void CapNhat(SinhVien sv) => ExecSv("dbo.CapNhatSinhVien", sv);
 

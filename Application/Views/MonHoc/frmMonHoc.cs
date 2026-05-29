@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.Core.Services;
 using QLSV.App.Helpers;
 using QLSV.App.Views.MonHoc.Func;
@@ -77,8 +76,8 @@ namespace QLSV.App.Views
         {
             using (var f = new frmThemMonHoc(maMh))
             {
-                f.ShowDialog();
-                NapDuLieu();
+                if (f.ShowDialog() == DialogResult.OK)
+                    NapDuLieu();
             }
         }
 
@@ -98,7 +97,7 @@ namespace QLSV.App.Views
 
                 CapNhatDem();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void CapNhatDem()
@@ -154,7 +153,7 @@ namespace QLSV.App.Views
                 Announce.Success("Đã xóa môn học.");
                 NapDuLieu();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnDangKyMon_Click(object sender, EventArgs e)
@@ -165,6 +164,8 @@ namespace QLSV.App.Views
                 Announce.Info("Tick cột Chọn ít nhất một môn, hoặc click một dòng rồi bấm Đăng ký SV.");
                 return;
             }
+            if (ds.Count > 1)
+                Announce.Info($"Đang mở đăng ký cho môn {ds[0].MaMH} (môn đầu tiên trong {ds.Count} môn đã chọn).");
             MoDangKyMon(ds[0].MaMH);
         }
 

@@ -38,6 +38,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Data\DocDangKy.cs" />
+    <Compile Include="Data\DocHocKy.cs" />
     <Compile Include="Data\DocDiem.cs" />
     <Compile Include="Data\DocLichHoc.cs" />
     <Compile Include="Data\DocLop.cs" />
@@ -51,6 +52,7 @@
     <Compile Include="Helpers\SessionContext.cs" />
     <Compile Include="Helpers\ValidationHelper.cs" />
     <Compile Include="Models\DangKyKetQua.cs" />
+    <Compile Include="Models\HocKyHienTai.cs" />
     <Compile Include="Models\KetQuaMon.cs" />
     <Compile Include="Models\LichHocItem.cs" />
     <Compile Include="Models\LopHoc.cs" />

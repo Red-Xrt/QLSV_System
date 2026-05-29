@@ -2,7 +2,6 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.App.Helpers;
 using QLSV.Core.Models;
 using QLSV.Core.Services;
@@ -137,12 +136,10 @@ namespace QLSV.App.Views.MonHoc.Func
                     return;
                 }
 
-                var msg = string.Join(Environment.NewLine, loi.Take(6).Select(x => $"{x.MaHienThi}: {x.ThongBao}"));
-                if (loi.Count > 6) msg += Environment.NewLine + "...";
-                Announce.Error($"Thành công: {ok}. Lỗi ({loi.Count}):\n{msg}");
+                Announce.KetQuaHangLoat(ok, loi.Select(x => $"{x.MaHienThi}: {x.ThongBao}"));
                 if (ok > 0) { DialogResult = DialogResult.OK; Close(); }
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnHuy_Click(object sender, EventArgs e)

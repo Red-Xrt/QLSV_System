@@ -1,7 +1,6 @@
 using System;
 using System.Linq;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.App.Helpers;
 using QLSV.Core.Services;
 using MonHocInfo = QLSV.Core.Models.MonHoc;
@@ -39,7 +38,7 @@ namespace QLSV.App.Views.MonHoc.Func
                 dtpGioKetThuc.Value = DateTime.Today.Add(ParseGio(mh.GioKetThuc));
                 lblTitle.Text = "MÔN: " + mh.MaMH;
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void NapComboThu()
@@ -118,7 +117,7 @@ namespace QLSV.App.Views.MonHoc.Func
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnDong_Click(object sender, EventArgs e)

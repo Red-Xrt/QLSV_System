@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.Core.Services;
 using QLSV.App.Helpers;
 using QLSV.Core.Models;
@@ -19,16 +18,19 @@ namespace QLSV.App.Views
 
         private void frmThemSv_Load(object sender, EventArgs e)
         {
+            txtMaSV.ReadOnly = true;
+            txtMaSV.TabStop = false;
             cboGioiTinh.SelectedIndex = 0;
             dtpNgaySinh.Value = DateTime.Today.AddYears(-20);
             try
             {
+                txtMaSV.Text = _bll.LayMaSvTiepTheo();
                 foreach (var l in _lopBll.LayDanhSach()) cboLop.Items.Add(l);
                 cboLop.DisplayMember = "TenLop";
                 cboLop.ValueMember = "MaLop";
                 if (cboLop.Items.Count > 0) cboLop.SelectedIndex = 0;
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnChonAnh_Click(object sender, EventArgs e)
@@ -41,7 +43,7 @@ namespace QLSV.App.Views
                     picAvatar.ImageLocation = ofd.FileName;
                     Announce.Info("Ảnh chỉ hiển thị trên máy này (chưa lưu database).");
                 }
-                catch (Exception ex) { Announce.Error("Không mở được ảnh: " + ex.Message); }
+                catch (Exception ex) { Announce.ErrorDatabase(ex); }
             }
         }
 
@@ -53,7 +55,6 @@ namespace QLSV.App.Views
                 var lop = (LopHoc)cboLop.SelectedItem;
                 _bll.Them(new SinhVien
                 {
-                    MaSV = txtMaSV.Text.Trim(),
                     HoTen = txtHoTen.Text.Trim(),
                     NgaySinh = dtpNgaySinh.Value.Date,
                     GioiTinh = cboGioiTinh.Text,
@@ -63,7 +64,7 @@ namespace QLSV.App.Views
                 DialogResult = DialogResult.OK;
                 Close();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnDong_Click(object sender, EventArgs e)

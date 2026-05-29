@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.Core.Services;
 using QLSV.App.Helpers;
 using QLSV.Core.Models;
@@ -135,7 +134,7 @@ namespace QLSV.App.Views.MonHoc.Func
                 if (!string.IsNullOrEmpty(_maMhMoDangKy))
                     MoTabDangKy(_maMhMoDangKy);
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void cboChonMon_SelectedIndexChanged(object sender, EventArgs e)
@@ -156,7 +155,7 @@ namespace QLSV.App.Views.MonHoc.Func
                     dgvSinhVien.Rows.Add(false, sv.MaSV, sv.HoTen, sv.TenLop ?? sv.MaLop);
                 CapNhatDem();
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void CapNhatDem()
@@ -202,12 +201,11 @@ namespace QLSV.App.Views.MonHoc.Func
                 }, dtpGioBatDau.Value.TimeOfDay, dtpGioKetThuc.Value.TimeOfDay);
 
                 Announce.Success("Thêm môn học thành công.");
-                DialogResult = DialogResult.OK;
                 txtMaMH.Clear();
                 txtTenMH.Clear();
                 frmThemMonHoc_Load(sender, e);
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnLuuDangKy_Click(object sender, EventArgs e)
@@ -237,16 +235,21 @@ namespace QLSV.App.Views.MonHoc.Func
                 var thatBai = ketQua.Where(x => !x.ThanhCong).ToList();
 
                 if (thatBai.Count == 0)
-                    Announce.Success($"Đăng ký thành công cho {thanhCong} sinh viên.");
-                else
                 {
-                    var msg = string.Join(Environment.NewLine, thatBai.Take(8).Select(x => $"{x.MaSV}: {x.ThongBao}"));
-                    if (thatBai.Count > 8) msg += Environment.NewLine + "...";
-                    Announce.Error($"Thành công: {thanhCong}. Lỗi ({thatBai.Count}):\n{msg}");
+                    Announce.Success($"Đăng ký thành công cho {thanhCong} sinh viên.");
+                    DialogResult = DialogResult.OK;
+                    Close();
+                    return;
                 }
-                if (thanhCong > 0) DialogResult = DialogResult.OK;
+
+                Announce.KetQuaHangLoat(thanhCong, thatBai.Select(x => $"{x.MaSV}: {x.ThongBao}"), 8);
+                if (thanhCong > 0)
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
             }
-            catch (Exception ex) { Announce.Error(KetNoi.BaoLoi(ex)); }
+            catch (Exception ex) { Announce.ErrorDatabase(ex); }
         }
 
         private void btnTimKiem_Click(object sender, EventArgs e)

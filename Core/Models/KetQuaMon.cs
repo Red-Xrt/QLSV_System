@@ -15,5 +15,11 @@ namespace QLSV.Core.Models
         public byte? DiemQuaTrinh { get; set; }
         public byte? DiemGiuaKi { get; set; }
         public byte? DiemCuoiKi { get; set; }
+
+        public bool LaKyHienTai(short namHoc, byte hocKy) => NamHoc == namHoc && HocKy == hocKy;
+
+        /// <summary>Đã nhập ít nhất một thành phần điểm (không tính TongKet tự tính từ trigger).</summary>
+        public bool DaCoDiem() =>
+            DiemQuaTrinh.HasValue || DiemGiuaKi.HasValue || DiemCuoiKi.HasValue;
     }
 }

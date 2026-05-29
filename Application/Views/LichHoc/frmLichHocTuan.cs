@@ -1,6 +1,5 @@
 using System;
 using System.Windows.Forms;
-using QLSV.Core.Data;
 using QLSV.App.Helpers;
 using QLSV.Core.Models;
 using QLSV.Core.Services;
@@ -97,7 +96,7 @@ namespace QLSV.App.Views.LichHoc
             }
             catch (Exception ex)
             {
-                Announce.Error(KetNoi.BaoLoi(ex));
+                Announce.ErrorDatabase(ex);
             }
         }
 
@@ -109,6 +108,7 @@ namespace QLSV.App.Views.LichHoc
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             NapComboSinhVien();
+            NapLich();
         }
 
         private void btnXem_Click(object sender, EventArgs e)
@@ -140,7 +140,7 @@ namespace QLSV.App.Views.LichHoc
             }
             catch (Exception ex)
             {
-                Announce.Error(KetNoi.BaoLoi(ex));
+                Announce.ErrorDatabase(ex);
             }
         }
     }

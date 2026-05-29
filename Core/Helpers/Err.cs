@@ -36,6 +36,7 @@ namespace QLSV.Core.Helpers
 
         public static void GhiLog(Exception ex, string nguCan = null)
         {
+            if (ex == null) return;
             var text = string.IsNullOrEmpty(nguCan)
                 ? GiaiThich(ex)
                 : nguCan + ": " + GiaiThich(ex);
