@@ -31,8 +31,25 @@ namespace QLSV.App.Views.MonHoc.Func
         private void frmChinhSuaMonHangLoat_Load(object sender, EventArgs e)
         {
             NapComboThu();
+            NapComboPhongVaGiangVien();
             dtpGioBatDau.Value = DateTime.Today.AddHours(7).AddMinutes(30);
             dtpGioKetThuc.Value = DateTime.Today.AddHours(9).AddMinutes(30);
+        }
+
+        private void NapComboPhongVaGiangVien()
+        {
+            var tatCaMon = _bll.LayDanhSach();
+            var dsPhong = tatCaMon.Select(x => x.PhongHoc).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList();
+            var dsGiangVien = tatCaMon.Select(x => x.GiangVienPhuTrach).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList();
+
+            cboPhong.Items.Clear();
+            cboGiangVien.Items.Clear();
+
+            foreach (var phong in dsPhong) cboPhong.Items.Add(phong);
+            foreach (var gv in dsGiangVien) cboGiangVien.Items.Add(gv);
+
+            if (cboPhong.Items.Count > 0) cboPhong.SelectedIndex = 0;
+            if (cboGiangVien.Items.Count > 0) cboGiangVien.SelectedIndex = 0;
         }
 
         private void NapComboThu()
@@ -50,12 +67,12 @@ namespace QLSV.App.Views.MonHoc.Func
 
         private void chkDoiPhong_CheckedChanged(object sender, EventArgs e)
         {
-            txtPhong.Enabled = chkDoiPhong.Checked;
+            cboPhong.Enabled = chkDoiPhong.Checked;
         }
 
         private void chkDoiGiangVien_CheckedChanged(object sender, EventArgs e)
         {
-            txtGiangVien.Enabled = chkDoiGiangVien.Checked;
+            cboGiangVien.Enabled = chkDoiGiangVien.Checked;
         }
 
         private void chkDoiLich_CheckedChanged(object sender, EventArgs e)
@@ -71,6 +88,16 @@ namespace QLSV.App.Views.MonHoc.Func
             if (!chkDoiPhong.Checked && !chkDoiGiangVien.Checked && !chkDoiLich.Checked)
             {
                 Announce.Info("Tick ít nhất một mục: phòng, giảng viên hoặc lịch học.");
+                return;
+            }
+            if (chkDoiPhong.Checked && cboPhong.SelectedItem == null)
+            {
+                Announce.Info("Chọn phòng học trong danh sách.");
+                return;
+            }
+            if (chkDoiGiangVien.Checked && cboGiangVien.SelectedItem == null)
+            {
+                Announce.Info("Chọn giảng viên trong danh sách.");
                 return;
             }
 
@@ -90,9 +117,9 @@ namespace QLSV.App.Views.MonHoc.Func
             {
                 var ketQua = _bll.CapNhatHangLoat(
                     _danhSach.Select(x => x.MaMH).ToList(),
-                    txtPhong.Text,
+                    chkDoiPhong.Checked ? cboPhong.Text : null,
                     chkDoiPhong.Checked,
-                    txtGiangVien.Text,
+                    chkDoiGiangVien.Checked ? cboGiangVien.Text : null,
                     chkDoiGiangVien.Checked,
                     thu,
                     gioBd,

@@ -1,4 +1,5 @@
 using System;
+using System.Linq;
 using System.Windows.Forms;
 using QLSV.Core.Data;
 using QLSV.App.Helpers;
@@ -21,6 +22,7 @@ namespace QLSV.App.Views.MonHoc.Func
         private void frmChitietMonHoc_Load(object sender, EventArgs e)
         {
             NapComboThu();
+            NapComboPhongVaGiangVien();
             try
             {
                 var mh = _bll.LayChiTiet(_maMh);
@@ -29,8 +31,8 @@ namespace QLSV.App.Views.MonHoc.Func
                 txtMaMH.Text = mh.MaMH;
                 txtTenMH.Text = mh.TenMH;
                 numTinChi.Value = mh.SoTinChi;
-                txtGiangVien.Text = mh.GiangVienPhuTrach ?? "";
-                txtPhong.Text = mh.PhongHoc ?? "";
+                ChonTheoText(cboGiangVien, mh.GiangVienPhuTrach);
+                ChonTheoText(cboPhong, mh.PhongHoc);
                 txtMoTa.Text = mh.MoTaMonHoc ?? "";
                 ChonThu(mh.ThuTrongTuan);
                 dtpGioBatDau.Value = DateTime.Today.Add(ParseGio(mh.GioBatDau));
@@ -62,6 +64,40 @@ namespace QLSV.App.Views.MonHoc.Func
                 }
         }
 
+        private void NapComboPhongVaGiangVien()
+        {
+            var ds = _bll.LayDanhSach();
+            var phongList = ds.Select(x => x.PhongHoc).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList();
+            var gvList = ds.Select(x => x.GiangVienPhuTrach).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList();
+
+            cboPhong.Items.Clear();
+            cboGiangVien.Items.Clear();
+            foreach (var phong in phongList) cboPhong.Items.Add(phong);
+            foreach (var gv in gvList) cboGiangVien.Items.Add(gv);
+        }
+
+        private static void ChonTheoText(ComboBox cbo, string value)
+        {
+            if (cbo == null) return;
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                if (cbo.Items.Count > 0) cbo.SelectedIndex = 0;
+                return;
+            }
+
+            for (var i = 0; i < cbo.Items.Count; i++)
+            {
+                if (string.Equals(cbo.Items[i]?.ToString(), value, StringComparison.OrdinalIgnoreCase))
+                {
+                    cbo.SelectedIndex = i;
+                    return;
+                }
+            }
+
+            cbo.Items.Add(value);
+            cbo.SelectedIndex = cbo.Items.Count - 1;
+        }
+
         private void btnLuu_Click(object sender, EventArgs e)
         {
             try
@@ -72,8 +108,8 @@ namespace QLSV.App.Views.MonHoc.Func
                     MaMH = txtMaMH.Text.Trim(),
                     TenMH = txtTenMH.Text.Trim(),
                     SoTinChi = (byte)numTinChi.Value,
-                    GiangVienPhuTrach = txtGiangVien.Text.Trim(),
-                    PhongHoc = txtPhong.Text.Trim(),
+                    GiangVienPhuTrach = cboGiangVien.Text.Trim(),
+                    PhongHoc = cboPhong.Text.Trim(),
                     MoTaMonHoc = txtMoTa.Text.Trim(),
                     ThuTrongTuan = thu.Value
                 }, dtpGioBatDau.Value.TimeOfDay, dtpGioKetThuc.Value.TimeOfDay);

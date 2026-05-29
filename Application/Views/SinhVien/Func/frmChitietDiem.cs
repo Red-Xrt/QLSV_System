@@ -15,6 +15,7 @@ namespace QLSV.App.Views
         private readonly string _tenMon;
         private readonly KetQuaMon _kqGoc;
         private readonly XuLyDiem _bll = new XuLyDiem();
+        private bool _choPhepSua = true;
 
         public frmChitietDiem(string maSv, string maMh, string tenMon, KetQuaMon kq)
         {
@@ -28,13 +29,51 @@ namespace QLSV.App.Views
         private void frmChitietDiem_Load(object sender, EventArgs e)
         {
             lblTitle.Text = "Điểm: " + _tenMon;
+            lblHocKy.Text = _kqGoc != null && !string.IsNullOrWhiteSpace(_kqGoc.HocKyText)
+                ? "Kỳ: " + _kqGoc.HocKyText
+                : "Kỳ: chưa xác định";
             if (_kqGoc != null)
             {
                 txtDiemQuaTrinh.Text = _kqGoc.DiemQuaTrinh?.ToString() ?? "0";
                 txtDiemGiuaKi.Text = _kqGoc.DiemGiuaKi?.ToString() ?? "0";
                 txtDiemThi.Text = _kqGoc.DiemCuoiKi?.ToString() ?? "0";
             }
+            KiemTraTrangThaiSua();
             CapNhatTong();
+        }
+
+        private void KiemTraTrangThaiSua()
+        {
+            try
+            {
+                var status = _bll.LayTrangThaiSua(_maSv, _maMh);
+                if (status == null) return;
+
+                _choPhepSua = status.CoTheSua;
+                if (status.NamHoc > 0 && status.HocKy > 0)
+                    lblHocKy.Text = $"Kỳ: {status.NamHoc} - HK{status.HocKy}";
+
+                if (!_choPhepSua)
+                {
+                    var thongBao = string.IsNullOrWhiteSpace(status.ThongBao)
+                        ? "Điểm của kỳ trước hoặc kỳ đã chốt không được chỉnh sửa."
+                        : status.ThongBao;
+
+                    txtDiemQuaTrinh.ReadOnly = true;
+                    txtDiemGiuaKi.ReadOnly = true;
+                    txtDiemThi.ReadOnly = true;
+                    btnLuu.Enabled = false;
+                    lblTrangThaiSua.Text = thongBao;
+                }
+                else
+                {
+                    lblTrangThaiSua.Text = "Có thể chỉnh sửa điểm cho môn học này.";
+                }
+            }
+            catch (Exception ex)
+            {
+                lblTrangThaiSua.Text = "Không xác định được trạng thái khóa điểm: " + KetNoi.BaoLoi(ex);
+            }
         }
 
         private void txtDiem_TextChanged(object sender, EventArgs e)
@@ -57,6 +96,9 @@ namespace QLSV.App.Views
         {
             try
             {
+                if (!_choPhepSua)
+                    throw new InvalidOperationException("Điểm của kỳ này đã bị khóa hoặc thuộc kỳ trước, không thể chỉnh sửa.");
+
                 if (!ValidationHelper.TryDiem(txtDiemQuaTrinh.Text, out var qt, out var err)) throw new ArgumentException(err);
                 if (!ValidationHelper.TryDiem(txtDiemGiuaKi.Text, out var gk, out err)) throw new ArgumentException(err);
                 if (!ValidationHelper.TryDiem(txtDiemThi.Text, out var ck, out err)) throw new ArgumentException(err);

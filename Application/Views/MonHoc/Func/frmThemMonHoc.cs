@@ -21,8 +21,8 @@ namespace QLSV.App.Views.MonHoc.Func
         private ComboBox cboThuTrongTuan;
         private DateTimePicker dtpGioBatDau;
         private DateTimePicker dtpGioKetThuc;
-        private TextBox txtPhongHoc;
-        private TextBox txtGiangVien;
+        private ComboBox cboPhongHoc;
+        private ComboBox cboGiangVien;
         private Label lblLichMon;
 
         private const string PlaceholderSv = "Nhập mã, tên SV...";
@@ -66,12 +66,24 @@ namespace QLSV.App.Views.MonHoc.Func
 
             y += 55;
             var lblPhong = new Label { Text = "Phòng học:", Location = new Point(40, y), AutoSize = true, Font = label1.Font };
-            txtPhongHoc = new TextBox { Location = new Point(150, y - 2), Size = new Size(120, 25), Font = txtMaMH.Font };
+            cboPhongHoc = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Location = new Point(150, y - 2),
+                Size = new Size(120, 25),
+                Font = txtMaMH.Font
+            };
             var lblGv = new Label { Text = "Giảng viên:", Location = new Point(290, y), AutoSize = true, Font = label1.Font };
-            txtGiangVien = new TextBox { Location = new Point(380, y - 2), Size = new Size(150, 25), Font = txtMaMH.Font };
+            cboGiangVien = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                Location = new Point(380, y - 2),
+                Size = new Size(150, 25),
+                Font = txtMaMH.Font
+            };
 
             btnLuuHeThong.Location = new Point(150, y + 50);
-            tabHeThong.Controls.AddRange(new Control[] { lblThu, cboThuTrongTuan, lblGio, dtpGioBatDau, dtpGioKetThuc, lblPhong, txtPhongHoc, lblGv, txtGiangVien });
+            tabHeThong.Controls.AddRange(new Control[] { lblThu, cboThuTrongTuan, lblGio, dtpGioBatDau, dtpGioKetThuc, lblPhong, cboPhongHoc, lblGv, cboGiangVien });
 
             lblLichMon = new Label
             {
@@ -111,6 +123,7 @@ namespace QLSV.App.Views.MonHoc.Func
                 cboLocLop.SelectedIndex = 0;
 
                 _danhSachMon = _monBll.LayDanhSach();
+                NapComboboxPhongGiangVien(_danhSachMon);
                 cboChonMon.Items.Clear();
                 foreach (var m in _danhSachMon)
                     cboChonMon.Items.Add(new MonHocItem(m));
@@ -172,15 +185,20 @@ namespace QLSV.App.Views.MonHoc.Func
         {
             try
             {
+                if (cboPhongHoc.SelectedItem == null)
+                    throw new ArgumentException("Chọn phòng học trong danh sách.");
+                if (cboGiangVien.SelectedItem == null)
+                    throw new ArgumentException("Chọn giảng viên trong danh sách.");
+
                 var thu = (ThuItem)cboThuTrongTuan.SelectedItem;
                 _monBll.Them(new MonHocInfo
                 {
                     MaMH = txtMaMH.Text.Trim(),
                     TenMH = txtTenMH.Text.Trim(),
                     SoTinChi = (byte)numTinChi.Value,
-                    GiangVienPhuTrach = txtGiangVien.Text.Trim(),
+                    GiangVienPhuTrach = cboGiangVien.Text.Trim(),
                     ThuTrongTuan = thu.Value,
-                    PhongHoc = txtPhongHoc.Text.Trim()
+                    PhongHoc = cboPhongHoc.Text.Trim()
                 }, dtpGioBatDau.Value.TimeOfDay, dtpGioKetThuc.Value.TimeOfDay);
 
                 Announce.Success("Thêm môn học thành công.");
@@ -305,6 +323,20 @@ namespace QLSV.App.Views.MonHoc.Func
             public string Text { get; }
             public ThuItem(byte v, string t) { Value = v; Text = t; }
             public override string ToString() => Text;
+        }
+
+        private void NapComboboxPhongGiangVien(List<MonHocInfo> danhSachMon)
+        {
+            var dsPhong = danhSachMon.Select(x => x.PhongHoc).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList();
+            var dsGiangVien = danhSachMon.Select(x => x.GiangVienPhuTrach).Where(x => !string.IsNullOrWhiteSpace(x)).Distinct().OrderBy(x => x).ToList();
+
+            cboPhongHoc.Items.Clear();
+            cboGiangVien.Items.Clear();
+            foreach (var phong in dsPhong) cboPhongHoc.Items.Add(phong);
+            foreach (var gv in dsGiangVien) cboGiangVien.Items.Add(gv);
+
+            if (cboPhongHoc.Items.Count > 0) cboPhongHoc.SelectedIndex = 0;
+            if (cboGiangVien.Items.Count > 0) cboGiangVien.SelectedIndex = 0;
         }
 
         private sealed class MonHocItem

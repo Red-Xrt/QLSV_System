@@ -23,6 +23,8 @@ namespace QLSV.App.Views
             this.txtDiemQuaTrinh = new System.Windows.Forms.TextBox();
             this.txtDiemGiuaKi = new System.Windows.Forms.TextBox();
             this.txtDiemThi = new System.Windows.Forms.TextBox();
+            this.lblHocKy = new System.Windows.Forms.Label();
+            this.lblTrangThaiSua = new System.Windows.Forms.Label();
             this.lblDiemTong = new System.Windows.Forms.Label();
             this.btnLuu = new System.Windows.Forms.Button();
             this.btnDong = new System.Windows.Forms.Button();
@@ -107,12 +109,33 @@ namespace QLSV.App.Views
             this.txtDiemThi.TabIndex = 9;
             this.txtDiemThi.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
             // 
+            // lblHocKy
+            //
+            this.lblHocKy.AutoSize = true;
+            this.lblHocKy.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
+            this.lblHocKy.Location = new System.Drawing.Point(31, 55);
+            this.lblHocKy.Name = "lblHocKy";
+            this.lblHocKy.Size = new System.Drawing.Size(86, 15);
+            this.lblHocKy.TabIndex = 15;
+            this.lblHocKy.Text = "Kỳ: chưa rõ";
+            //
+            // lblTrangThaiSua
+            //
+            this.lblTrangThaiSua.AutoSize = false;
+            this.lblTrangThaiSua.Font = new System.Drawing.Font("Segoe UI", 8.5F);
+            this.lblTrangThaiSua.ForeColor = System.Drawing.Color.DimGray;
+            this.lblTrangThaiSua.Location = new System.Drawing.Point(30, 258);
+            this.lblTrangThaiSua.Name = "lblTrangThaiSua";
+            this.lblTrangThaiSua.Size = new System.Drawing.Size(280, 35);
+            this.lblTrangThaiSua.TabIndex = 16;
+            this.lblTrangThaiSua.Text = "Trạng thái chỉnh sửa điểm.";
+            //
             // lblDiemTong
             // 
             this.lblDiemTong.AutoSize = true;
             this.lblDiemTong.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Bold);
             this.lblDiemTong.ForeColor = System.Drawing.Color.IndianRed;
-            this.lblDiemTong.Location = new System.Drawing.Point(30, 230);
+            this.lblDiemTong.Location = new System.Drawing.Point(30, 220);
             this.lblDiemTong.Name = "lblDiemTong";
             this.lblDiemTong.Size = new System.Drawing.Size(191, 25);
             this.lblDiemTong.TabIndex = 6;
@@ -125,7 +148,7 @@ namespace QLSV.App.Views
             this.btnLuu.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnLuu.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
             this.btnLuu.ForeColor = System.Drawing.Color.White;
-            this.btnLuu.Location = new System.Drawing.Point(180, 280);
+            this.btnLuu.Location = new System.Drawing.Point(180, 300);
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(120, 35);
             this.btnLuu.TabIndex = 7;
@@ -138,7 +161,7 @@ namespace QLSV.App.Views
             this.btnDong.FlatAppearance.BorderSize = 0;
             this.btnDong.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnDong.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold);
-            this.btnDong.Location = new System.Drawing.Point(34, 280);
+            this.btnDong.Location = new System.Drawing.Point(34, 300);
             this.btnDong.Name = "btnDong";
             this.btnDong.Size = new System.Drawing.Size(120, 35);
             this.btnDong.TabIndex = 8;
@@ -150,10 +173,12 @@ namespace QLSV.App.Views
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.White;
-            this.ClientSize = new System.Drawing.Size(350, 340);
+            this.ClientSize = new System.Drawing.Size(350, 350);
             this.Controls.Add(this.btnDong);
             this.Controls.Add(this.btnLuu);
+            this.Controls.Add(this.lblTrangThaiSua);
             this.Controls.Add(this.lblDiemTong);
+            this.Controls.Add(this.lblHocKy);
             this.Controls.Add(this.txtDiemThi);
             this.Controls.Add(this.txtDiemGiuaKi);
             this.Controls.Add(this.txtDiemQuaTrinh);
@@ -188,6 +213,8 @@ namespace QLSV.App.Views
         private System.Windows.Forms.TextBox txtDiemQuaTrinh;
         private System.Windows.Forms.TextBox txtDiemGiuaKi;
         private System.Windows.Forms.TextBox txtDiemThi;
+        private System.Windows.Forms.Label lblHocKy;
+        private System.Windows.Forms.Label lblTrangThaiSua;
         private System.Windows.Forms.Label lblDiemTong;
         private System.Windows.Forms.Button btnLuu;
         private System.Windows.Forms.Button btnDong;

@@ -12,18 +12,63 @@ namespace QLSV.App.Views.LichHoc
         private readonly XuLyLichHoc _lichBll = new XuLyLichHoc();
         private readonly XuLySinhVien _svBll = new XuLySinhVien();
         private readonly string _maSvMacDinh;
+        private readonly bool _cheDoPopup;
 
         public frmLichHocTuan() : this(null) { }
 
         public frmLichHocTuan(string maSv)
         {
             _maSvMacDinh = maSv;
+            _cheDoPopup = !string.IsNullOrWhiteSpace(maSv);
             InitializeComponent();
+            ApDungCheDoHienThi();
+        }
+
+        private void ApDungCheDoHienThi()
+        {
+            if (_cheDoPopup)
+            {
+                FormBorderStyle = FormBorderStyle.FixedDialog;
+                StartPosition = FormStartPosition.CenterParent;
+                MaximizeBox = false;
+                MinimizeBox = false;
+                ShowInTaskbar = false;
+                KeyPreview = true;
+                CancelButton = btnDong;
+                ClientSize = new System.Drawing.Size(920, 480);
+                Text = "Lịch học tuần";
+                btnDong.Visible = true;
+                cboSinhVien.Enabled = false;
+                label1.Text = "Sinh viên:";
+            }
+            else
+            {
+                btnDong.Visible = false;
+            }
         }
 
         private void frmLichHocTuan_Load(object sender, EventArgs e)
         {
             NapComboSinhVien();
+            if (_cheDoPopup)
+                NapLich();
+        }
+
+        private void btnDong_Click(object sender, EventArgs e)
+        {
+            DialogResult = DialogResult.OK;
+            Close();
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            if (_cheDoPopup && e.KeyCode == Keys.Escape)
+            {
+                DialogResult = DialogResult.Cancel;
+                Close();
+                return;
+            }
+            base.OnKeyDown(e);
         }
 
         private void NapComboSinhVien()

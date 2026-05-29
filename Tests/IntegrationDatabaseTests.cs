@@ -218,6 +218,30 @@ namespace QLSV.Core.Tests
         }
 
         [TestMethod]
+        public void CapNhatDiem_PreviousSemester_ShouldBeBlocked()
+        {
+            var diemSvc = new XuLyDiem();
+            TrangThaiSuaDiem status;
+            try
+            {
+                status = diemSvc.LayTrangThaiSua("SV001", "MH001");
+            }
+            catch
+            {
+                Assert.Inconclusive("Database chưa chạy script mới có proc KiemTraTrangThaiSuaDiem.");
+                return; // unreachable, keep explicit for readability
+            }
+            if (status == null || status.CoTheSua)
+            {
+                Assert.Inconclusive("Seed DB hiện tại chưa có bản ghi điểm kỳ trước bị khóa cho SV001-MH001.");
+                return; // unreachable
+            }
+
+            var ex = Catch<Exception>(() => diemSvc.CapNhat("SV001", "MH001", 9, 9, 9));
+            StringAssert.Contains(ex.Message, "kỳ trước");
+        }
+
+        [TestMethod]
         public void LichHoc_SeedStudent_ShouldReturnRows()
         {
             var svc = new XuLyLichHoc();

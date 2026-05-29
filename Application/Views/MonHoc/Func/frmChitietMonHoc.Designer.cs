@@ -20,8 +20,8 @@ namespace QLSV.App.Views.MonHoc.Func
             this.dtpGioKetThuc = new System.Windows.Forms.DateTimePicker();
             this.dtpGioBatDau = new System.Windows.Forms.DateTimePicker();
             this.cboThu = new System.Windows.Forms.ComboBox();
-            this.txtPhong = new System.Windows.Forms.TextBox();
-            this.txtGiangVien = new System.Windows.Forms.TextBox();
+            this.cboPhong = new System.Windows.Forms.ComboBox();
+            this.cboGiangVien = new System.Windows.Forms.ComboBox();
             this.numTinChi = new System.Windows.Forms.NumericUpDown();
             this.txtTenMH = new System.Windows.Forms.TextBox();
             this.txtMaMH = new System.Windows.Forms.TextBox();
@@ -63,8 +63,8 @@ namespace QLSV.App.Views.MonHoc.Func
             this.pnlBody.Controls.Add(this.dtpGioKetThuc);
             this.pnlBody.Controls.Add(this.dtpGioBatDau);
             this.pnlBody.Controls.Add(this.cboThu);
-            this.pnlBody.Controls.Add(this.txtPhong);
-            this.pnlBody.Controls.Add(this.txtGiangVien);
+            this.pnlBody.Controls.Add(this.cboPhong);
+            this.pnlBody.Controls.Add(this.cboGiangVien);
             this.pnlBody.Controls.Add(this.numTinChi);
             this.pnlBody.Controls.Add(this.txtTenMH);
             this.pnlBody.Controls.Add(this.txtMaMH);
@@ -89,9 +89,11 @@ namespace QLSV.App.Views.MonHoc.Func
             this.label3.Text = "Số tín chỉ:"; this.label3.Location = new System.Drawing.Point(20, 96); this.label3.AutoSize = true;
             this.numTinChi.Location = new System.Drawing.Point(140, 92); this.numTinChi.Minimum = 1; this.numTinChi.Maximum = 10; this.numTinChi.Value = 3;
             this.label4.Text = "Giảng viên:"; this.label4.Location = new System.Drawing.Point(20, 134); this.label4.AutoSize = true;
-            this.txtGiangVien.Location = new System.Drawing.Point(140, 130); this.txtGiangVien.Size = new System.Drawing.Size(340, 27);
+            this.cboGiangVien.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboGiangVien.Location = new System.Drawing.Point(140, 130); this.cboGiangVien.Size = new System.Drawing.Size(340, 28);
             this.label5.Text = "Phòng:"; this.label5.Location = new System.Drawing.Point(20, 172); this.label5.AutoSize = true;
-            this.txtPhong.Location = new System.Drawing.Point(140, 168); this.txtPhong.Size = new System.Drawing.Size(120, 27);
+            this.cboPhong.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboPhong.Location = new System.Drawing.Point(140, 168); this.cboPhong.Size = new System.Drawing.Size(120, 28);
             this.label6.Text = "Thứ:"; this.label6.Location = new System.Drawing.Point(280, 172); this.label6.AutoSize = true;
             this.cboThu.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboThu.Location = new System.Drawing.Point(330, 168); this.cboThu.Size = new System.Drawing.Size(150, 28);
@@ -170,9 +172,9 @@ namespace QLSV.App.Views.MonHoc.Func
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.NumericUpDown numTinChi;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.TextBox txtGiangVien;
+        private System.Windows.Forms.ComboBox cboGiangVien;
         private System.Windows.Forms.Label label5;
-        private System.Windows.Forms.TextBox txtPhong;
+        private System.Windows.Forms.ComboBox cboPhong;
         private System.Windows.Forms.Label label6;
         private System.Windows.Forms.ComboBox cboThu;
         private System.Windows.Forms.Label label7;

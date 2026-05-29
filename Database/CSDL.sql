@@ -39,6 +39,10 @@ IF OBJECT_ID(N'dbo.CapNhatLop', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatLop;
 IF OBJECT_ID(N'dbo.XoaLop', N'P') IS NOT NULL DROP PROCEDURE dbo.XoaLop;
 IF OBJECT_ID(N'dbo.HuyDangKyMonHoc', N'P') IS NOT NULL DROP PROCEDURE dbo.HuyDangKyMonHoc;
 IF OBJECT_ID(N'dbo.LayLichHocSinhVien', N'P') IS NOT NULL DROP PROCEDURE dbo.LayLichHocSinhVien;
+IF OBJECT_ID(N'dbo.KiemTraTrangThaiSuaDiem', N'P') IS NOT NULL DROP PROCEDURE dbo.KiemTraTrangThaiSuaDiem;
+IF OBJECT_ID(N'dbo.LayHocKyHienTai', N'P') IS NOT NULL DROP PROCEDURE dbo.LayHocKyHienTai;
+IF OBJECT_ID(N'dbo.DatHocKyHienTai', N'P') IS NOT NULL DROP PROCEDURE dbo.DatHocKyHienTai;
+IF OBJECT_ID(N'dbo.KhoaDiemHocKy', N'P') IS NOT NULL DROP PROCEDURE dbo.KhoaDiemHocKy;
 IF OBJECT_ID(N'dbo.ThemLop', N'P') IS NOT NULL DROP PROCEDURE dbo.ThemLop;
 IF OBJECT_ID(N'dbo.CapNhatLop', N'P') IS NOT NULL DROP PROCEDURE dbo.CapNhatLop;
 IF OBJECT_ID(N'dbo.XoaLop', N'P') IS NOT NULL DROP PROCEDURE dbo.XoaLop;
@@ -66,6 +70,7 @@ GO
 
 /* --- Bảng --- */
 IF OBJECT_ID(N'dbo.DiemThi', N'U') IS NOT NULL DROP TABLE dbo.DiemThi;
+IF OBJECT_ID(N'dbo.HocKy', N'U') IS NOT NULL DROP TABLE dbo.HocKy;
 IF OBJECT_ID(N'dbo.SinhVien', N'U') IS NOT NULL DROP TABLE dbo.SinhVien;
 IF OBJECT_ID(N'dbo.MonHoc', N'U') IS NOT NULL DROP TABLE dbo.MonHoc;
 IF OBJECT_ID(N'dbo.LopHoc', N'U') IS NOT NULL DROP TABLE dbo.LopHoc;
@@ -103,14 +108,25 @@ CREATE TABLE dbo.SinhVien (
     HocLuc      NVARCHAR(30)  NULL
 );
 
+CREATE TABLE dbo.HocKy (
+    NamHoc    SMALLINT NOT NULL,
+    HocKy     TINYINT  NOT NULL CHECK (HocKy IN (1, 2, 3)),
+    LaHienTai BIT      NOT NULL DEFAULT 0,
+    KhoaDiem  BIT      NOT NULL DEFAULT 0,
+    CONSTRAINT PK_HocKy PRIMARY KEY (NamHoc, HocKy)
+);
+
 CREATE TABLE dbo.DiemThi (
     MaSV         VARCHAR(20) NOT NULL REFERENCES dbo.SinhVien(MaSV),
     MaMH         VARCHAR(20) NOT NULL REFERENCES dbo.MonHoc(MaMH),
+    NamHoc       SMALLINT    NOT NULL,
+    HocKy        TINYINT     NOT NULL CHECK (HocKy IN (1, 2, 3)),
     DiemQuaTrinh TINYINT       NULL CHECK (DiemQuaTrinh BETWEEN 0 AND 10),
     DiemGiuaKi   TINYINT       NULL CHECK (DiemGiuaKi BETWEEN 0 AND 10),
     DiemCuoiKi   TINYINT       NULL CHECK (DiemCuoiKi BETWEEN 0 AND 10),
     TongKet      DECIMAL(4,1)  NULL,
-    CONSTRAINT PK_DiemThi PRIMARY KEY (MaSV, MaMH)
+    CONSTRAINT PK_DiemThi PRIMARY KEY (MaSV, MaMH, NamHoc, HocKy),
+    CONSTRAINT FK_DiemThi_HocKy FOREIGN KEY (NamHoc, HocKy) REFERENCES dbo.HocKy(NamHoc, HocKy)
 );
 
 CREATE TABLE dbo.TaiKhoan (
@@ -123,6 +139,7 @@ CREATE TABLE dbo.TaiKhoan (
 GO
 
 DELETE FROM dbo.DiemThi;
+DELETE FROM dbo.HocKy;
 DELETE FROM dbo.SinhVien;
 DELETE FROM dbo.MonHoc;
 DELETE FROM dbo.LopHoc;
@@ -138,6 +155,13 @@ INSERT INTO dbo.LopHoc (MaLop, TenLop) VALUES
 (N'D23KHMT02', N'Khoa học máy tính K23'),
 (N'D23HTTT01', N'Hệ thống thông tin K23'),
 (N'D23MMT01', N'Mạng máy tính K23');
+GO
+
+INSERT INTO dbo.HocKy (NamHoc, HocKy, LaHienTai, KhoaDiem) VALUES
+(2024, 1, 0, 1),
+(2024, 2, 0, 1),
+(2025, 1, 0, 0),
+(2025, 2, 1, 0);
 GO
 
 INSERT INTO dbo.MonHoc (MaMH, TenMH, SoTinChi, GiangVienPhuTrach, MoTaMonHoc, ThuTrongTuan, GioBatDau, GioKetThuc, PhongHoc) VALUES
@@ -182,49 +206,50 @@ INSERT INTO dbo.SinhVien (MaSV, HoTen, NgaySinh, GioiTinh, SoDienThoai, Email, D
 GO
 
 /* SV001: MH001 + MH002; SV002: MH001 + MH003 (trùng Thứ 2 7:30-9:30 với MH001 nếu đăng ký thêm MH khác cùng giờ) */
-INSERT INTO dbo.DiemThi (MaSV, MaMH, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi) VALUES
-(N'SV001', N'MH001', 8, 7, 9),
-(N'SV001', N'MH002', 7, 8, 8),
-(N'SV002', N'MH001', 9, 9, 10),
-(N'SV002', N'MH003', 6, 7, 7),
-(N'SV003', N'MH004', 5, 6, 6),
-(N'SV005', N'MH005', 8, 8, 9),
-(N'SV006', N'MH006', 4, 5, 5),
-(N'SV006', N'MH010', 6, 7, 7),
-(N'SV007', N'MH001', 10, 9, 10),
-(N'SV007', N'MH007', 9, 8, 9),
-(N'SV007', N'MH011', 8, 8, 9),
-(N'SV008', N'MH002', 8, 7, 8),
-(N'SV008', N'MH008', 9, 9, 8),
-(N'SV008', N'MH012', NULL, NULL, NULL),
-(N'SV009', N'MH003', 3, 4, 4),
-(N'SV009', N'MH009', 5, 4, 5),
-(N'SV010', N'MH004', 7, 6, 7),
-(N'SV010', N'MH013', 8, 9, 8),
-(N'SV010', N'MH015', 10, 10, 10),
-(N'SV011', N'MH005', 2, 3, 4),
-(N'SV011', N'MH014', 5, 5, 5),
-(N'SV012', N'MH006', 7, 8, 9),
-(N'SV012', N'MH010', 8, 8, 8),
-(N'SV013', N'MH007', 6, 6, 7),
-(N'SV013', N'MH011', 7, 7, 7),
-(N'SV013', N'MH014', 6, 5, 6),
-(N'SV014', N'MH008', 9, 9, 9),
-(N'SV014', N'MH012', 8, 9, 9),
-(N'SV015', N'MH009', 4, 4, 3),
-(N'SV015', N'MH013', 5, 6, 5),
-(N'SV016', N'MH010', 9, 8, 10),
-(N'SV016', N'MH015', 7, 8, 8),
-(N'SV017', N'MH001', 6, 6, 6),
-(N'SV017', N'MH003', 5, 6, 5),
-(N'SV017', N'MH014', 6, 7, 6),
-(N'SV018', N'MH002', 9, 10, 10),
-(N'SV018', N'MH005', 8, 9, 9),
-(N'SV019', N'MH006', 5, 5, 4),
-(N'SV019', N'MH011', 6, 5, 6),
-(N'SV020', N'MH007', 10, 9, 10),
-(N'SV020', N'MH012', 9, 9, 10),
-(N'SV020', N'MH015', 8, 8, 9);
+INSERT INTO dbo.DiemThi (MaSV, MaMH, NamHoc, HocKy, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi) VALUES
+(N'SV001', N'MH001', 2024, 1, 8, 7, 9),
+(N'SV001', N'MH002', 2024, 1, 7, 8, 8),
+(N'SV002', N'MH001', 2024, 1, 9, 9, 10),
+(N'SV002', N'MH003', 2024, 1, 6, 7, 7),
+(N'SV003', N'MH004', 2024, 1, 5, 6, 6),
+(N'SV005', N'MH005', 2024, 1, 8, 8, 9),
+
+(N'SV006', N'MH006', 2025, 2, 4, 5, 5),
+(N'SV006', N'MH010', 2025, 2, 6, 7, 7),
+(N'SV007', N'MH001', 2025, 2, 10, 9, 10),
+(N'SV007', N'MH007', 2025, 2, 9, 8, 9),
+(N'SV007', N'MH011', 2025, 2, 8, 8, 9),
+(N'SV008', N'MH002', 2025, 2, 8, 7, 8),
+(N'SV008', N'MH008', 2025, 2, 9, 9, 8),
+(N'SV008', N'MH012', 2025, 2, NULL, NULL, NULL),
+(N'SV009', N'MH003', 2025, 2, 3, 4, 4),
+(N'SV009', N'MH009', 2025, 2, 5, 4, 5),
+(N'SV010', N'MH004', 2025, 2, 7, 6, 7),
+(N'SV010', N'MH013', 2025, 2, 8, 9, 8),
+(N'SV010', N'MH015', 2025, 2, 10, 10, 10),
+(N'SV011', N'MH005', 2025, 2, 2, 3, 4),
+(N'SV011', N'MH014', 2025, 2, 5, 5, 5),
+(N'SV012', N'MH006', 2025, 2, 7, 8, 9),
+(N'SV012', N'MH010', 2025, 2, 8, 8, 8),
+(N'SV013', N'MH007', 2025, 2, 6, 6, 7),
+(N'SV013', N'MH011', 2025, 2, 7, 7, 7),
+(N'SV013', N'MH014', 2025, 2, 6, 5, 6),
+(N'SV014', N'MH008', 2025, 2, 9, 9, 9),
+(N'SV014', N'MH012', 2025, 2, 8, 9, 9),
+(N'SV015', N'MH009', 2025, 2, 4, 4, 3),
+(N'SV015', N'MH013', 2025, 2, 5, 6, 5),
+(N'SV016', N'MH010', 2025, 2, 9, 8, 10),
+(N'SV016', N'MH015', 2025, 2, 7, 8, 8),
+(N'SV017', N'MH001', 2025, 2, 6, 6, 6),
+(N'SV017', N'MH003', 2025, 2, 5, 6, 5),
+(N'SV017', N'MH014', 2025, 2, 6, 7, 6),
+(N'SV018', N'MH002', 2025, 2, 9, 10, 10),
+(N'SV018', N'MH005', 2025, 2, 8, 9, 9),
+(N'SV019', N'MH006', 2025, 2, 5, 5, 4),
+(N'SV019', N'MH011', 2025, 2, 6, 5, 6),
+(N'SV020', N'MH007', 2025, 2, 10, 9, 10),
+(N'SV020', N'MH012', 2025, 2, 9, 9, 10),
+(N'SV020', N'MH015', 2025, 2, 8, 8, 9);
 GO
 
 /* Hash tên đăng nhập: SHA-256 UTF-8 chữ thường (CryptoHelper.HashUsername). Mật khẩu: PBKDF2. UI: admin/123456, giaovu/123456 */
@@ -296,17 +321,24 @@ RETURNS BIT
 AS
 BEGIN
     DECLARE @Thu TINYINT, @BatDau TIME(0), @KetThuc TIME(0);
+    DECLARE @NamHocHt SMALLINT, @HocKyHt TINYINT;
+
+    SELECT TOP 1 @NamHocHt = NamHoc, @HocKyHt = HocKy
+    FROM dbo.HocKy
+    WHERE LaHienTai = 1;
 
     SELECT @Thu = ThuTrongTuan, @BatDau = GioBatDau, @KetThuc = GioKetThuc
     FROM dbo.MonHoc WHERE MaMH = @MaMH;
 
-    IF @Thu IS NULL RETURN 0;
+    IF @Thu IS NULL OR @NamHocHt IS NULL OR @HocKyHt IS NULL RETURN 0;
 
     IF EXISTS (
         SELECT 1
         FROM dbo.DiemThi dt
         INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH
         WHERE dt.MaSV = @MaSV
+          AND dt.NamHoc = @NamHocHt
+          AND dt.HocKy = @HocKyHt
           AND dt.MaMH <> @MaMH
           AND mh.ThuTrongTuan = @Thu
           AND @BatDau < mh.GioKetThuc
@@ -334,24 +366,6 @@ SELECT
     END AS GhiChu
 FROM dbo.SinhVien sv
 LEFT JOIN dbo.LopHoc l ON sv.MaLop = l.MaLop;
-GO
-
-CREATE OR ALTER VIEW dbo.vw_LichHocSinhVien
-AS
-SELECT
-    sv.MaSV,
-    sv.HoTen,
-    mh.MaMH,
-    mh.TenMH,
-    mh.ThuTrongTuan,
-    dbo.fn_ThuTrongTuanText(mh.ThuTrongTuan) AS ThuHoc,
-    CONVERT(VARCHAR(5), mh.GioBatDau, 108) + N' - ' + CONVERT(VARCHAR(5), mh.GioKetThuc, 108) AS KhungGio,
-    mh.PhongHoc,
-    mh.GiangVienPhuTrach,
-    mh.SoTinChi
-FROM dbo.DiemThi dt
-INNER JOIN dbo.SinhVien sv ON dt.MaSV = sv.MaSV
-INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH;
 GO
 
 CREATE OR ALTER VIEW dbo.vw_MonHocChiTiet
@@ -383,6 +397,8 @@ SELECT
     sv.HoTen,
     mh.MaMH,
     mh.TenMH,
+    dt.NamHoc,
+    dt.HocKy,
     mh.SoTinChi,
     mh.ThuTrongTuan,
     dbo.fn_ThuTrongTuanText(mh.ThuTrongTuan) AS ThuHoc,
@@ -403,9 +419,9 @@ BEGIN
     SET NOCOUNT ON;
 
     UPDATE dt
-    SET TongKet = CAST(dbo.fn_TinhDiemTongKet(i.DiemQuaTrinh, i.DiemGiuaKi, i.DiemCuoiKi) AS TINYINT)
+    SET TongKet = dbo.fn_TinhDiemTongKet(i.DiemQuaTrinh, i.DiemGiuaKi, i.DiemCuoiKi)
     FROM dbo.DiemThi dt
-    INNER JOIN inserted i ON dt.MaSV = i.MaSV AND dt.MaMH = i.MaMH;
+    INNER JOIN inserted i ON dt.MaSV = i.MaSV AND dt.MaMH = i.MaMH AND dt.NamHoc = i.NamHoc AND dt.HocKy = i.HocKy;
 
     /* Đồng bộ GPA & học lực tổng trên SinhVien */
     ;WITH DiemTB AS (
@@ -593,12 +609,16 @@ BEGIN
     SELECT dt.MaMH, m.TenMH, m.SoTinChi,
            dbo.fn_ThuTrongTuanText(m.ThuTrongTuan) AS ThuHoc,
            CONVERT(VARCHAR(5), m.GioBatDau, 108) + N' - ' + CONVERT(VARCHAR(5), m.GioKetThuc, 108) AS KhungGio,
+           dt.NamHoc, dt.HocKy,
+           CAST(dt.NamHoc AS NVARCHAR(10)) + N' - HK' + CAST(dt.HocKy AS NVARCHAR(10)) AS HocKyText,
+           ISNULL(hk.KhoaDiem, 0) AS KhoaDiem,
            dt.TongKet,
            dt.DiemQuaTrinh, dt.DiemGiuaKi, dt.DiemCuoiKi
     FROM dbo.DiemThi dt
     JOIN dbo.MonHoc m ON dt.MaMH = m.MaMH
+    LEFT JOIN dbo.HocKy hk ON hk.NamHoc = dt.NamHoc AND hk.HocKy = dt.HocKy
     WHERE dt.MaSV = @MaSv
-    ORDER BY m.ThuTrongTuan, m.GioBatDau;
+    ORDER BY dt.NamHoc DESC, dt.HocKy DESC, m.ThuTrongTuan, m.GioBatDau;
 END
 GO
 
@@ -614,6 +634,15 @@ BEGIN
 
     BEGIN TRY
         BEGIN TRANSACTION;
+        DECLARE @NamHocHt SMALLINT, @HocKyHt TINYINT, @KhoaDiem BIT;
+        DECLARE @NamHocBanGhi SMALLINT, @HocKyBanGhi TINYINT;
+
+        SELECT TOP 1 @NamHocHt = NamHoc, @HocKyHt = HocKy, @KhoaDiem = KhoaDiem
+        FROM dbo.HocKy
+        WHERE LaHienTai = 1;
+
+        IF @NamHocHt IS NULL OR @HocKyHt IS NULL
+            THROW 51040, N'Chưa cấu hình học kỳ hiện tại.', 1;
 
         IF NOT EXISTS (SELECT 1 FROM dbo.SinhVien WHERE MaSV = @MaSV)
             THROW 51012, N'Mã sinh viên không tồn tại', 1;
@@ -621,18 +650,31 @@ BEGIN
         IF NOT EXISTS (SELECT 1 FROM dbo.MonHoc WHERE MaMH = @MaMH)
             THROW 51013, N'Mã môn học không tồn tại', 1;
 
-        IF EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH)
+        SELECT TOP 1 @NamHocBanGhi = NamHoc, @HocKyBanGhi = HocKy
+        FROM dbo.DiemThi
+        WHERE MaSV = @MaSV AND MaMH = @MaMH
+        ORDER BY NamHoc DESC, HocKy DESC;
+
+        IF @NamHocBanGhi IS NOT NULL
         BEGIN
+            IF @NamHocBanGhi <> @NamHocHt OR @HocKyBanGhi <> @HocKyHt
+                THROW 51041, N'Không được chỉnh sửa điểm của kỳ trước.', 1;
+            IF @KhoaDiem = 1
+                THROW 51042, N'Học kỳ hiện tại đã khóa điểm.', 1;
+
             UPDATE dbo.DiemThi
             SET DiemQuaTrinh = @DiemQuaTrinh,
                 DiemGiuaKi   = @DiemGiuaKi,
                 DiemCuoiKi   = @DiemCuoiKi
-            WHERE MaSV = @MaSV AND MaMH = @MaMH;
+            WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt;
         END
         ELSE
         BEGIN
-            INSERT INTO dbo.DiemThi (MaSV, MaMH, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi)
-            VALUES (@MaSV, @MaMH, @DiemQuaTrinh, @DiemGiuaKi, @DiemCuoiKi);
+            IF @KhoaDiem = 1
+                THROW 51042, N'Học kỳ hiện tại đã khóa điểm.', 1;
+
+            INSERT INTO dbo.DiemThi (MaSV, MaMH, NamHoc, HocKy, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi)
+            VALUES (@MaSV, @MaMH, @NamHocHt, @HocKyHt, @DiemQuaTrinh, @DiemGiuaKi, @DiemCuoiKi);
         END
 
         COMMIT TRANSACTION;
@@ -641,6 +683,100 @@ BEGIN
         IF @@TRANCOUNT > 0 ROLLBACK TRANSACTION;
         THROW;
     END CATCH
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.KiemTraTrangThaiSuaDiem
+    @MaSV VARCHAR(20),
+    @MaMH VARCHAR(20)
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    DECLARE @NamHocHt SMALLINT, @HocKyHt TINYINT, @KhoaDiemHt BIT;
+    DECLARE @NamHocBanGhi SMALLINT, @HocKyBanGhi TINYINT, @KhoaDiemBanGhi BIT;
+
+    SELECT TOP 1 @NamHocHt = NamHoc, @HocKyHt = HocKy, @KhoaDiemHt = KhoaDiem
+    FROM dbo.HocKy
+    WHERE LaHienTai = 1;
+
+    SELECT TOP 1
+        @NamHocBanGhi = dt.NamHoc,
+        @HocKyBanGhi = dt.HocKy,
+        @KhoaDiemBanGhi = hk.KhoaDiem
+    FROM dbo.DiemThi dt
+    LEFT JOIN dbo.HocKy hk ON hk.NamHoc = dt.NamHoc AND hk.HocKy = dt.HocKy
+    WHERE dt.MaSV = @MaSV AND dt.MaMH = @MaMH
+    ORDER BY dt.NamHoc DESC, dt.HocKy DESC;
+
+    IF @NamHocBanGhi IS NULL
+    BEGIN
+        SELECT CAST(1 AS BIT) AS CoTheSua, N'Điểm thuộc kỳ hiện tại, có thể chỉnh sửa.' AS ThongBao,
+               ISNULL(@NamHocHt, 0) AS NamHoc, ISNULL(@HocKyHt, 0) AS HocKy, CAST(ISNULL(@KhoaDiemHt, 0) AS BIT) AS KhoaDiem;
+        RETURN;
+    END
+
+    IF @NamHocHt IS NULL OR @HocKyHt IS NULL
+    BEGIN
+        SELECT CAST(0 AS BIT) AS CoTheSua, N'Chưa cấu hình học kỳ hiện tại.' AS ThongBao,
+               @NamHocBanGhi AS NamHoc, @HocKyBanGhi AS HocKy, CAST(ISNULL(@KhoaDiemBanGhi, 0) AS BIT) AS KhoaDiem;
+        RETURN;
+    END
+
+    IF @NamHocBanGhi <> @NamHocHt OR @HocKyBanGhi <> @HocKyHt
+    BEGIN
+        SELECT CAST(0 AS BIT) AS CoTheSua, N'Điểm thuộc kỳ trước, không được chỉnh sửa.' AS ThongBao,
+               @NamHocBanGhi AS NamHoc, @HocKyBanGhi AS HocKy, CAST(ISNULL(@KhoaDiemBanGhi, 0) AS BIT) AS KhoaDiem;
+        RETURN;
+    END
+
+    IF ISNULL(@KhoaDiemBanGhi, 0) = 1
+    BEGIN
+        SELECT CAST(0 AS BIT) AS CoTheSua, N'Học kỳ hiện tại đã khóa điểm.' AS ThongBao,
+               @NamHocBanGhi AS NamHoc, @HocKyBanGhi AS HocKy, CAST(1 AS BIT) AS KhoaDiem;
+        RETURN;
+    END
+
+    SELECT CAST(1 AS BIT) AS CoTheSua, N'Có thể chỉnh sửa điểm.' AS ThongBao,
+           @NamHocBanGhi AS NamHoc, @HocKyBanGhi AS HocKy, CAST(0 AS BIT) AS KhoaDiem;
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.LayHocKyHienTai
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT TOP 1 NamHoc, HocKy, KhoaDiem
+    FROM dbo.HocKy
+    WHERE LaHienTai = 1;
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.DatHocKyHienTai
+    @NamHoc SMALLINT,
+    @HocKy TINYINT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM dbo.HocKy WHERE NamHoc = @NamHoc AND HocKy = @HocKy)
+        THROW 51043, N'Học kỳ không tồn tại.', 1;
+
+    UPDATE dbo.HocKy SET LaHienTai = 0;
+    UPDATE dbo.HocKy SET LaHienTai = 1 WHERE NamHoc = @NamHoc AND HocKy = @HocKy;
+END
+GO
+
+CREATE OR ALTER PROCEDURE dbo.KhoaDiemHocKy
+    @NamHoc SMALLINT,
+    @HocKy TINYINT,
+    @Khoa BIT
+AS
+BEGIN
+    SET NOCOUNT ON;
+    IF NOT EXISTS (SELECT 1 FROM dbo.HocKy WHERE NamHoc = @NamHoc AND HocKy = @HocKy)
+        THROW 51043, N'Học kỳ không tồn tại.', 1;
+
+    UPDATE dbo.HocKy SET KhoaDiem = @Khoa WHERE NamHoc = @NamHoc AND HocKy = @HocKy;
 END
 GO
 
@@ -786,6 +922,17 @@ BEGIN
     SET @ThongBao = N'';
 
     BEGIN TRY
+        DECLARE @NamHocHt SMALLINT, @HocKyHt TINYINT, @KhoaDiemHt BIT;
+        SELECT TOP 1 @NamHocHt = NamHoc, @HocKyHt = HocKy, @KhoaDiemHt = KhoaDiem
+        FROM dbo.HocKy
+        WHERE LaHienTai = 1;
+
+        IF @NamHocHt IS NULL OR @HocKyHt IS NULL
+        BEGIN
+            SET @ThongBao = N'Chưa cấu hình học kỳ hiện tại';
+            RETURN;
+        END
+
         IF NOT EXISTS (SELECT 1 FROM dbo.SinhVien WHERE MaSV = @MaSV)
         BEGIN
             SET @ThongBao = N'Mã sinh viên không tồn tại';
@@ -798,7 +945,13 @@ BEGIN
             RETURN;
         END
 
-        IF EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH)
+        IF @KhoaDiemHt = 1
+        BEGIN
+            SET @ThongBao = N'Học kỳ hiện tại đã khóa điểm, không thể đăng ký';
+            RETURN;
+        END
+
+        IF EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt)
         BEGIN
             SET @ThongBao = N'Sinh viên đã đăng ký môn này';
             RETURN;
@@ -816,14 +969,16 @@ BEGIN
             WHERE dt.MaSV = @MaSV
               AND mh.ThuTrongTuan = mNew.ThuTrongTuan
               AND mNew.GioBatDau < mh.GioKetThuc
-              AND mh.GioBatDau < mNew.GioKetThuc;
+              AND mh.GioBatDau < mNew.GioKetThuc
+              AND dt.NamHoc = @NamHocHt
+              AND dt.HocKy = @HocKyHt;
 
             SET @ThongBao = N'Trùng lịch học với môn: ' + ISNULL(@Lich, N'môn đã đăng ký');
             RETURN;
         END
 
-        INSERT INTO dbo.DiemThi (MaSV, MaMH, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi)
-        VALUES (@MaSV, @MaMH, NULL, NULL, NULL);
+        INSERT INTO dbo.DiemThi (MaSV, MaMH, NamHoc, HocKy, DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi)
+        VALUES (@MaSV, @MaMH, @NamHocHt, @HocKyHt, NULL, NULL, NULL);
 
         SET @ThanhCong = 1;
         SET @ThongBao = N'Đăng ký thành công';
@@ -913,13 +1068,24 @@ BEGIN
     SET @ThongBao = N'';
 
     BEGIN TRY
-        IF NOT EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH)
+        DECLARE @NamHocHt SMALLINT, @HocKyHt TINYINT;
+        SELECT TOP 1 @NamHocHt = NamHoc, @HocKyHt = HocKy
+        FROM dbo.HocKy
+        WHERE LaHienTai = 1;
+
+        IF @NamHocHt IS NULL OR @HocKyHt IS NULL
+        BEGIN
+            SET @ThongBao = N'Chưa cấu hình học kỳ hiện tại';
+            RETURN;
+        END
+
+        IF NOT EXISTS (SELECT 1 FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt)
         BEGIN
             SET @ThongBao = N'Sinh viên chưa đăng ký môn này';
             RETURN;
         END
 
-        DELETE FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH;
+        DELETE FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt;
         SET @ThanhCong = 1;
         SET @ThongBao = N'Đã hủy đăng ký môn học';
     END TRY
@@ -935,6 +1101,11 @@ AS
 BEGIN
     SET NOCOUNT ON;
     BEGIN TRY
+        DECLARE @NamHocHt SMALLINT, @HocKyHt TINYINT;
+        SELECT TOP 1 @NamHocHt = NamHoc, @HocKyHt = HocKy
+        FROM dbo.HocKy
+        WHERE LaHienTai = 1;
+
         SELECT
             MaMH,
             TenMH,
@@ -947,6 +1118,8 @@ BEGIN
             GiangVienPhuTrach
         FROM dbo.vw_LichHocSinhVien
         WHERE MaSV = @MaSV
+          AND (@NamHocHt IS NULL OR NamHoc = @NamHocHt)
+          AND (@HocKyHt IS NULL OR HocKy = @HocKyHt)
         ORDER BY ThuTrongTuan, GioBatDau;
     END TRY
     BEGIN CATCH

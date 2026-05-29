@@ -15,6 +15,7 @@ namespace QLSV.App.Views.LichHoc
         {
             this.pnlTop = new System.Windows.Forms.Panel();
             this.lblTieuDe = new System.Windows.Forms.Label();
+            this.btnDong = new System.Windows.Forms.Button();
             this.btnLamMoi = new System.Windows.Forms.Button();
             this.btnXem = new System.Windows.Forms.Button();
             this.cboSinhVien = new System.Windows.Forms.ComboBox();
@@ -35,6 +36,7 @@ namespace QLSV.App.Views.LichHoc
             // 
             this.pnlTop.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(31)))), ((int)(((byte)(30)))), ((int)(((byte)(68)))));
             this.pnlTop.Controls.Add(this.lblTieuDe);
+            this.pnlTop.Controls.Add(this.btnDong);
             this.pnlTop.Controls.Add(this.btnLamMoi);
             this.pnlTop.Controls.Add(this.btnXem);
             this.pnlTop.Controls.Add(this.cboSinhVien);
@@ -56,6 +58,22 @@ namespace QLSV.App.Views.LichHoc
             this.lblTieuDe.Size = new System.Drawing.Size(968, 28);
             this.lblTieuDe.TabIndex = 4;
             this.lblTieuDe.Text = "LỊCH HỌC TUẦN";
+            // 
+            // btnDong
+            // 
+            this.btnDong.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnDong.BackColor = System.Drawing.Color.IndianRed;
+            this.btnDong.FlatAppearance.BorderSize = 0;
+            this.btnDong.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnDong.ForeColor = System.Drawing.Color.White;
+            this.btnDong.Location = new System.Drawing.Point(884, 8);
+            this.btnDong.Name = "btnDong";
+            this.btnDong.Size = new System.Drawing.Size(100, 28);
+            this.btnDong.TabIndex = 5;
+            this.btnDong.Text = "Đóng";
+            this.btnDong.UseVisualStyleBackColor = false;
+            this.btnDong.Visible = false;
+            this.btnDong.Click += new System.EventHandler(this.btnDong_Click);
             // 
             // btnLamMoi
             // 
@@ -200,6 +218,7 @@ namespace QLSV.App.Views.LichHoc
         private System.Windows.Forms.ComboBox cboSinhVien;
         private System.Windows.Forms.Button btnXem;
         private System.Windows.Forms.Button btnLamMoi;
+        private System.Windows.Forms.Button btnDong;
         private System.Windows.Forms.Label lblTieuDe;
         private System.Windows.Forms.DataGridView dgvLich;
         private System.Windows.Forms.DataGridViewTextBoxColumn colThu;

@@ -82,7 +82,7 @@ namespace QLSV.App.Views
         private void btnLichTuan_Click(object sender, EventArgs e)
         {
             using (var f = new frmLichHocTuan(_maSv))
-                f.ShowDialog();
+                f.ShowDialog(this);
         }
 
         private void dgvDiemThi_CellContentClick(object sender, DataGridViewCellEventArgs e)

@@ -1,6 +1,7 @@
 using System;
 using QLSV.Core.Data;
 using QLSV.Core.Helpers;
+using QLSV.Core.Models;
 
 namespace QLSV.Core.Services
 {
@@ -20,5 +21,12 @@ namespace QLSV.Core.Services
 
         public decimal TinhTong(byte qt, byte gk, byte ck) =>
             Math.Round(qt * 0.2m + gk * 0.3m + ck * 0.5m, 1);
+
+        public TrangThaiSuaDiem LayTrangThaiSua(string maSv, string maMh)
+        {
+            if (!ValidationHelper.MaSV(maSv, out var err)) throw new ArgumentException(err);
+            if (!ValidationHelper.MaMH(maMh, out err)) throw new ArgumentException(err);
+            return _db.LayTrangThaiSua(maSv.Trim(), maMh.Trim());
+        }
     }
 }

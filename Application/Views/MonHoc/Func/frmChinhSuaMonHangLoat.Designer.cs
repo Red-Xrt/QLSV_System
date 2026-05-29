@@ -20,9 +20,9 @@ namespace QLSV.App.Views.MonHoc.Func
             this.dtpGioBatDau = new System.Windows.Forms.DateTimePicker();
             this.cboThu = new System.Windows.Forms.ComboBox();
             this.chkDoiLich = new System.Windows.Forms.CheckBox();
-            this.txtGiangVien = new System.Windows.Forms.TextBox();
+            this.cboGiangVien = new System.Windows.Forms.ComboBox();
             this.chkDoiGiangVien = new System.Windows.Forms.CheckBox();
-            this.txtPhong = new System.Windows.Forms.TextBox();
+            this.cboPhong = new System.Windows.Forms.ComboBox();
             this.chkDoiPhong = new System.Windows.Forms.CheckBox();
             this.lblHuongDan = new System.Windows.Forms.Label();
             this.grpDanhSach = new System.Windows.Forms.GroupBox();
@@ -72,9 +72,9 @@ namespace QLSV.App.Views.MonHoc.Func
             this.grpThaoTac.Controls.Add(this.dtpGioBatDau);
             this.grpThaoTac.Controls.Add(this.cboThu);
             this.grpThaoTac.Controls.Add(this.chkDoiLich);
-            this.grpThaoTac.Controls.Add(this.txtGiangVien);
+            this.grpThaoTac.Controls.Add(this.cboGiangVien);
             this.grpThaoTac.Controls.Add(this.chkDoiGiangVien);
-            this.grpThaoTac.Controls.Add(this.txtPhong);
+            this.grpThaoTac.Controls.Add(this.cboPhong);
             this.grpThaoTac.Controls.Add(this.chkDoiPhong);
             this.grpThaoTac.Controls.Add(this.lblHuongDan);
             this.grpThaoTac.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -97,11 +97,12 @@ namespace QLSV.App.Views.MonHoc.Func
             this.chkDoiPhong.Text = "Đổi phòng học";
             this.chkDoiPhong.CheckedChanged += new System.EventHandler(this.chkDoiPhong_CheckedChanged);
             // 
-            // txtPhong
+            // cboPhong
             // 
-            this.txtPhong.Enabled = false;
-            this.txtPhong.Location = new System.Drawing.Point(16, 128);
-            this.txtPhong.Size = new System.Drawing.Size(150, 27);
+            this.cboPhong.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboPhong.Enabled = false;
+            this.cboPhong.Location = new System.Drawing.Point(16, 128);
+            this.cboPhong.Size = new System.Drawing.Size(150, 28);
             // 
             // chkDoiGiangVien
             // 
@@ -109,11 +110,12 @@ namespace QLSV.App.Views.MonHoc.Func
             this.chkDoiGiangVien.Text = "Đổi giảng viên";
             this.chkDoiGiangVien.CheckedChanged += new System.EventHandler(this.chkDoiGiangVien_CheckedChanged);
             // 
-            // txtGiangVien
+            // cboGiangVien
             // 
-            this.txtGiangVien.Enabled = false;
-            this.txtGiangVien.Location = new System.Drawing.Point(16, 204);
-            this.txtGiangVien.Size = new System.Drawing.Size(340, 27);
+            this.cboGiangVien.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboGiangVien.Enabled = false;
+            this.cboGiangVien.Location = new System.Drawing.Point(16, 204);
+            this.cboGiangVien.Size = new System.Drawing.Size(340, 28);
             // 
             // chkDoiLich
             // 
@@ -208,9 +210,9 @@ namespace QLSV.App.Views.MonHoc.Func
         private System.Windows.Forms.GroupBox grpThaoTac;
         private System.Windows.Forms.Label lblHuongDan;
         private System.Windows.Forms.CheckBox chkDoiPhong;
-        private System.Windows.Forms.TextBox txtPhong;
+        private System.Windows.Forms.ComboBox cboPhong;
         private System.Windows.Forms.CheckBox chkDoiGiangVien;
-        private System.Windows.Forms.TextBox txtGiangVien;
+        private System.Windows.Forms.ComboBox cboGiangVien;
         private System.Windows.Forms.CheckBox chkDoiLich;
         private System.Windows.Forms.ComboBox cboThu;
         private System.Windows.Forms.DateTimePicker dtpGioBatDau;
