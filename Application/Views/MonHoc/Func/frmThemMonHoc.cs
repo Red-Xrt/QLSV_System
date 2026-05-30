@@ -35,6 +35,14 @@ namespace QLSV.App.Views.MonHoc.Func
             _maMhMoDangKy = maMhMoDangKy;
             InitializeComponent();
             TaoControlLichHoc();
+            txtTimKiem.KeyDown += (s, e) =>
+            {
+                if (e.KeyCode == Keys.Enter)
+                {
+                    e.SuppressKeyPress = true;
+                    NapSinhVien();
+                }
+            };
             GridHelper.GanSuKienCheckbox(dgvSinhVien, CapNhatDem, CotChonSv);
         }
 

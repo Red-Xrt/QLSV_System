@@ -36,8 +36,9 @@ namespace QLSV.Core.Tests
         {
             var kq = new KetQuaMon { TongKet = 0m };
             Assert.IsFalse(kq.DaCoDiem());
-            kq.DiemCuoiKi = 7;
-            Assert.IsTrue(kq.DaCoDiem());
+
+            kq.DiemCuoiKi = 0;
+            Assert.IsTrue(kq.DaCoDiem(), "Điểm 0 thật vẫn được coi là đã nhập.");
         }
 
         [TestMethod]

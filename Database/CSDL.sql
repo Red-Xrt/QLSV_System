@@ -269,6 +269,10 @@ CREATE OR ALTER FUNCTION dbo.fn_TinhDiemTongKet
 RETURNS DECIMAL(4, 1)
 AS
 BEGIN
+    /* Chưa nhập điểm nào → chưa có tổng kết (khác với điểm 0 thật) */
+    IF @DiemQuaTrinh IS NULL AND @DiemGiuaKi IS NULL AND @DiemCuoiKi IS NULL
+        RETURN NULL;
+
     RETURN ROUND(
         ISNULL(@DiemQuaTrinh, 0) * 0.2
         + ISNULL(@DiemGiuaKi, 0) * 0.3
@@ -433,6 +437,7 @@ BEGIN
         FROM dbo.DiemThi dt
         INNER JOIN inserted i ON dt.MaSV = i.MaSV
         INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH
+        WHERE dt.TongKet IS NOT NULL
         GROUP BY dt.MaSV
     )
     UPDATE sv
@@ -441,6 +446,15 @@ BEGIN
         HocLuc = dbo.fn_XepLoaiHocLuc(d.DiemTB)
     FROM dbo.SinhVien sv
     INNER JOIN DiemTB d ON sv.MaSV = d.MaSV;
+
+    UPDATE sv
+    SET DiemTB = NULL, HocLuc = NULL
+    FROM dbo.SinhVien sv
+    INNER JOIN inserted i ON sv.MaSV = i.MaSV
+    WHERE NOT EXISTS (
+        SELECT 1 FROM dbo.DiemThi dt
+        WHERE dt.MaSV = sv.MaSV AND dt.TongKet IS NOT NULL
+    );
 END
 GO
 
@@ -472,8 +486,8 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE dbo.TimKiemSinhVien
-    @TuKhoa VARCHAR(100) = NULL,
-    @MaLop  VARCHAR(20)  = NULL
+    @TuKhoa NVARCHAR(100) = NULL,
+    @MaLop  VARCHAR(20)   = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -492,8 +506,8 @@ BEGIN
         WHERE (@MaLop IS NULL OR sv.MaLop = @MaLop)
           AND (
                 @TuKhoa IS NULL
-                OR sv.MaSV LIKE '%' + @TuKhoa + '%'
-                OR sv.HoTen LIKE N'%' + @TuKhoa + '%'
+                OR sv.MaSV LIKE N'%' + @TuKhoa + N'%'
+                OR sv.HoTen LIKE N'%' + @TuKhoa + N'%'
               )
         ORDER BY sv.MaSV;
     END TRY
@@ -801,7 +815,7 @@ END
 GO
 
 CREATE OR ALTER PROCEDURE dbo.LayDanhSachMonHoc
-    @TuKhoa VARCHAR(100) = NULL
+    @TuKhoa NVARCHAR(100) = NULL
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -809,9 +823,9 @@ BEGIN
            ThuTrongTuan, ThuHoc, GioBatDau, GioKetThuc, LichHocText, PhongHoc
     FROM dbo.vw_MonHocChiTiet
     WHERE @TuKhoa IS NULL
-       OR MaMH LIKE '%' + @TuKhoa + '%'
-       OR TenMH LIKE N'%' + @TuKhoa + '%'
-       OR GiangVienPhuTrach LIKE N'%' + @TuKhoa + '%'
+       OR MaMH LIKE N'%' + @TuKhoa + N'%'
+       OR TenMH LIKE N'%' + @TuKhoa + N'%'
+       OR GiangVienPhuTrach LIKE N'%' + @TuKhoa + N'%'
     ORDER BY MaMH;
 END
 GO
@@ -1108,7 +1122,7 @@ BEGIN
         IF EXISTS (
             SELECT 1 FROM dbo.DiemThi
             WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt
-              AND (DiemQuaTrinh IS NOT NULL OR DiemGiuaKi IS NOT NULL OR DiemCuoiKi IS NOT NULL OR TongKet IS NOT NULL)
+              AND (DiemQuaTrinh IS NOT NULL OR DiemGiuaKi IS NOT NULL OR DiemCuoiKi IS NOT NULL)
         )
         BEGIN
             SET @ThongBao = N'Môn đã có điểm, không thể hủy đăng ký.';
@@ -1116,6 +1130,27 @@ BEGIN
         END
 
         DELETE FROM dbo.DiemThi WHERE MaSV = @MaSV AND MaMH = @MaMH AND NamHoc = @NamHocHt AND HocKy = @HocKyHt;
+
+        ;WITH DiemTB AS (
+            SELECT
+                dt.MaSV,
+                DiemTB = ROUND(SUM(dt.TongKet * mh.SoTinChi) * 1.0 / NULLIF(SUM(mh.SoTinChi), 0), 2)
+            FROM dbo.DiemThi dt
+            INNER JOIN dbo.MonHoc mh ON dt.MaMH = mh.MaMH
+            WHERE dt.MaSV = @MaSV AND dt.TongKet IS NOT NULL
+            GROUP BY dt.MaSV
+        )
+        UPDATE sv
+        SET DiemTB = d.DiemTB, HocLuc = dbo.fn_XepLoaiHocLuc(d.DiemTB)
+        FROM dbo.SinhVien sv
+        INNER JOIN DiemTB d ON sv.MaSV = d.MaSV
+        WHERE sv.MaSV = @MaSV;
+
+        UPDATE sv SET DiemTB = NULL, HocLuc = NULL
+        FROM dbo.SinhVien sv
+        WHERE sv.MaSV = @MaSV
+          AND NOT EXISTS (SELECT 1 FROM dbo.DiemThi dt WHERE dt.MaSV = sv.MaSV AND dt.TongKet IS NOT NULL);
+
         SET @ThanhCong = 1;
         SET @ThongBao = N'Đã hủy đăng ký môn học';
     END TRY
@@ -1229,6 +1264,11 @@ CREATE OR ALTER PROCEDURE dbo.DongBoDiemGPA
 AS
 BEGIN
     SET NOCOUNT ON;
+
+    /* Dọn TongKet=0 giả do phiên bản cũ tính từ NULL */
+    UPDATE dbo.DiemThi
+    SET TongKet = NULL
+    WHERE DiemQuaTrinh IS NULL AND DiemGiuaKi IS NULL AND DiemCuoiKi IS NULL;
 
     UPDATE dbo.DiemThi
     SET TongKet = dbo.fn_TinhDiemTongKet(DiemQuaTrinh, DiemGiuaKi, DiemCuoiKi);

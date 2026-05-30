@@ -16,7 +16,7 @@ namespace QLSV.App.Views
 
         public frmChinhSuaHangLoat(IReadOnlyList<SinhVienChon> danhSach)
         {
-            _danhSach = danhSach ?? throw new ArgumentNullException(nameof(danhSach));
+            _danhSach = danhSach;
             if (_danhSach.Count < 2)
                 throw new ArgumentException("Form hàng loạt cần từ 2 sinh viên trở lên.");
 
@@ -70,7 +70,16 @@ namespace QLSV.App.Views
                 maLop = ((LopHoc)cboLopMoi.SelectedItem).MaLop;
             }
 
-            string gioiTinh = chkDoiGioiTinh.Checked ? cboGioiTinh.Text : null;
+            string gioiTinh;
+
+            if (chkDoiGioiTinh.Checked == true)
+            {
+                gioiTinh = cboGioiTinh.Text;
+            }
+            else
+            {
+                gioiTinh = null;
+            }
 
             if (!Announce.YesNo($"Cập nhật {_danhSach.Count} sinh viên đã chọn?"))
                 return;

@@ -53,7 +53,7 @@ namespace QLSV.App.Views
             this.pnlTopBar.Controls.Add(this.txtTimKiem);
             this.pnlTopBar.Dock = System.Windows.Forms.DockStyle.Top;
             this.pnlTopBar.Location = new System.Drawing.Point(0, 0);
-            this.pnlTopBar.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlTopBar.Margin = new System.Windows.Forms.Padding(4);
             this.pnlTopBar.Name = "pnlTopBar";
             this.pnlTopBar.Size = new System.Drawing.Size(1048, 74);
             this.pnlTopBar.TabIndex = 1;
@@ -63,7 +63,7 @@ namespace QLSV.App.Views
             this.cboLocLop.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cboLocLop.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.cboLocLop.Location = new System.Drawing.Point(513, 22);
-            this.cboLocLop.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.cboLocLop.Margin = new System.Windows.Forms.Padding(4);
             this.cboLocLop.Name = "cboLocLop";
             this.cboLocLop.Size = new System.Drawing.Size(199, 31);
             this.cboLocLop.TabIndex = 10;
@@ -89,7 +89,7 @@ namespace QLSV.App.Views
             this.btnThem.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnThem.ForeColor = System.Drawing.Color.White;
             this.btnThem.Location = new System.Drawing.Point(907, 18);
-            this.btnThem.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnThem.Margin = new System.Windows.Forms.Padding(4);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(120, 37);
             this.btnThem.TabIndex = 2;
@@ -101,7 +101,7 @@ namespace QLSV.App.Views
             // 
             this.btnTimKiem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnTimKiem.Location = new System.Drawing.Point(293, 21);
-            this.btnTimKiem.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnTimKiem.Margin = new System.Windows.Forms.Padding(4);
             this.btnTimKiem.Name = "btnTimKiem";
             this.btnTimKiem.Size = new System.Drawing.Size(100, 33);
             this.btnTimKiem.TabIndex = 1;
@@ -113,7 +113,7 @@ namespace QLSV.App.Views
             // 
             this.txtTimKiem.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.txtTimKiem.Location = new System.Drawing.Point(20, 22);
-            this.txtTimKiem.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.txtTimKiem.Margin = new System.Windows.Forms.Padding(4);
             this.txtTimKiem.Name = "txtTimKiem";
             this.txtTimKiem.Size = new System.Drawing.Size(265, 30);
             this.txtTimKiem.TabIndex = 0;
@@ -129,7 +129,7 @@ namespace QLSV.App.Views
             this.pnlBottom.Controls.Add(this.btnUnSellectAll);
             this.pnlBottom.Dock = System.Windows.Forms.DockStyle.Bottom;
             this.pnlBottom.Location = new System.Drawing.Point(0, 427);
-            this.pnlBottom.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.pnlBottom.Margin = new System.Windows.Forms.Padding(4);
             this.pnlBottom.Name = "pnlBottom";
             this.pnlBottom.Size = new System.Drawing.Size(1048, 62);
             this.pnlBottom.TabIndex = 2;
@@ -155,7 +155,7 @@ namespace QLSV.App.Views
             this.btnCheckAll.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnCheckAll.ForeColor = System.Drawing.Color.White;
             this.btnCheckAll.Location = new System.Drawing.Point(704, 12);
-            this.btnCheckAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnCheckAll.Margin = new System.Windows.Forms.Padding(4);
             this.btnCheckAll.Name = "btnCheckAll";
             this.btnCheckAll.Size = new System.Drawing.Size(147, 37);
             this.btnCheckAll.TabIndex = 8;
@@ -172,7 +172,7 @@ namespace QLSV.App.Views
             this.btnUnSellectAll.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             this.btnUnSellectAll.ForeColor = System.Drawing.Color.White;
             this.btnUnSellectAll.Location = new System.Drawing.Point(869, 12);
-            this.btnUnSellectAll.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.btnUnSellectAll.Margin = new System.Windows.Forms.Padding(4);
             this.btnUnSellectAll.Name = "btnUnSellectAll";
             this.btnUnSellectAll.Size = new System.Drawing.Size(147, 37);
             this.btnUnSellectAll.TabIndex = 9;
@@ -195,7 +195,7 @@ namespace QLSV.App.Views
             this.dataGridView1.ContextMenuStrip = this.contextMenuStrip1;
             this.dataGridView1.Dock = System.Windows.Forms.DockStyle.Fill;
             this.dataGridView1.Location = new System.Drawing.Point(0, 74);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(4);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.SelectionMode = System.Windows.Forms.DataGridViewSelectionMode.FullRowSelect;
@@ -274,7 +274,7 @@ namespace QLSV.App.Views
             this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.pnlBottom);
             this.Controls.Add(this.pnlTopBar);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "frmSv";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản Lý Sinh Viên";

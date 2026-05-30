@@ -18,7 +18,17 @@ namespace QLSV.App.Views
         public frmSv()
         {
             InitializeComponent();
+            txtTimKiem.KeyDown += TimKiemEnter;
             GridHelper.GanSuKienCheckbox(dataGridView1, CapNhatDem, CotChon);
+        }
+
+        private void TimKiemEnter(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                NapDuLieu();
+            }
         }
 
         private void frmSv_Load(object sender, EventArgs e)
@@ -33,9 +43,14 @@ namespace QLSV.App.Views
             {
                 cboLocLop.Items.Clear();
                 cboLocLop.Items.Add(new LopHoc { MaLop = "", TenLop = "Tất cả lớp" });
-                foreach (var l in _lopBll.LayDanhSach()) cboLocLop.Items.Add(l);
                 cboLocLop.DisplayMember = "TenLop";
                 cboLocLop.ValueMember = "MaLop";
+
+                foreach (var l in _lopBll.LayDanhSach())
+                {
+                    cboLocLop.Items.Add(l);
+                }
+
                 cboLocLop.SelectedIndex = 0;
             }
             catch (Exception ex) { Announce.ErrorDatabase(ex); }

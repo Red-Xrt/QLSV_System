@@ -199,6 +199,9 @@
     <EmbeddedResource Include="Views\SinhVien\Func\frmChitietDiem.resx">
       <DependentUpon>frmChitietDiem.cs</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="Views\SinhVien\Func\frmDangKyMonChoSv.resx">
+      <DependentUpon>frmDangKyMonChoSv.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Views\SinhVien\Func\frmThemSv.resx">
       <DependentUpon>frmThemSv.cs</DependentUpon>
     </EmbeddedResource>

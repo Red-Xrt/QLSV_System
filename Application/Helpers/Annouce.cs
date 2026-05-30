@@ -46,7 +46,6 @@ namespace QLSV.App.Helpers
             Error(Err.GiaiThich(ex));
         }
 
-        /// <summary>Thông báo kết quả thao tác hàng loạt (một phần thành công).</summary>
         public static void KetQuaHangLoat(int thanhCong, IEnumerable<string> thongBaoLoi, int gioiHanDong = 6)
         {
             var loi = thongBaoLoi?.Where(x => !string.IsNullOrWhiteSpace(x)).ToList() ?? new List<string>();

@@ -173,8 +173,6 @@ namespace QLSV.Core.Tests
                 Assert.AreEqual(mhId, dk[0].MaMH);
 
                 var huy = dkSvc.HuyDangKy(maSv, mhId);
-                if (!huy.ThanhCong && huy.ThongBao != null && huy.ThongBao.IndexOf("điểm", StringComparison.OrdinalIgnoreCase) >= 0)
-                    Assert.Inconclusive("Proc HuyDangKy chặn khi TongKet đã được trigger gán — cần chỉnh DB (ngoài scope).");
                 Assert.IsTrue(huy.ThanhCong, huy.ThongBao);
             }
             finally

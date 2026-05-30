@@ -91,7 +91,7 @@ namespace QLSV.App.Views.QuanLyLop
             this.btnLuu.Name = "btnLuu";
             this.btnLuu.Size = new System.Drawing.Size(110, 32);
             this.btnLuu.TabIndex = 1;
-            this.btnLuu.Text = "Thêm lớp";
+            this.btnLuu.Text = "Lưu";
             this.btnLuu.UseVisualStyleBackColor = false;
             this.btnLuu.Click += new System.EventHandler(this.btnLuu_Click);
             // 
@@ -101,7 +101,7 @@ namespace QLSV.App.Views.QuanLyLop
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(100, 32);
             this.btnThem.TabIndex = 0;
-            this.btnThem.Text = "Lớp mới";
+            this.btnThem.Text = "Thêm lớp";
             this.btnThem.UseVisualStyleBackColor = true;
             this.btnThem.Click += new System.EventHandler(this.btnThem_Click);
             // 
@@ -130,12 +130,14 @@ namespace QLSV.App.Views.QuanLyLop
             // 
             this.colMaLop.FillWeight = 80F;
             this.colMaLop.HeaderText = "Mã lớp";
+            this.colMaLop.MinimumWidth = 6;
             this.colMaLop.Name = "colMaLop";
             this.colMaLop.ReadOnly = true;
             // 
             // colTenLop
             // 
             this.colTenLop.HeaderText = "Tên lớp";
+            this.colTenLop.MinimumWidth = 6;
             this.colTenLop.Name = "colTenLop";
             this.colTenLop.ReadOnly = true;
             // 
@@ -143,6 +145,7 @@ namespace QLSV.App.Views.QuanLyLop
             // 
             this.colSiSo.FillWeight = 60F;
             this.colSiSo.HeaderText = "Sĩ số";
+            this.colSiSo.MinimumWidth = 6;
             this.colSiSo.Name = "colSiSo";
             this.colSiSo.ReadOnly = true;
             // 
@@ -176,9 +179,9 @@ namespace QLSV.App.Views.QuanLyLop
             // 
             // txtTenLop
             // 
-            this.txtTenLop.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.txtTenLop.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtTenLop.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.txtTenLop.Location = new System.Drawing.Point(420, 58);
             this.txtTenLop.Name = "txtTenLop";
             this.txtTenLop.Size = new System.Drawing.Size(248, 30);
@@ -198,7 +201,7 @@ namespace QLSV.App.Views.QuanLyLop
             this.label2.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.label2.Location = new System.Drawing.Point(340, 61);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(74, 23);
+            this.label2.Size = new System.Drawing.Size(69, 23);
             this.label2.TabIndex = 1;
             this.label2.Text = "Tên lớp:";
             // 
@@ -208,7 +211,7 @@ namespace QLSV.App.Views.QuanLyLop
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.label1.Location = new System.Drawing.Point(24, 61);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(69, 23);
+            this.label1.Size = new System.Drawing.Size(67, 23);
             this.label1.TabIndex = 0;
             this.label1.Text = "Mã lớp:";
             // 

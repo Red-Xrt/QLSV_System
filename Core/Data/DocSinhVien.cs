@@ -14,7 +14,7 @@ namespace QLSV.Core.Data
             using (var conn = KetNoi.MoKetNoi())
             using (var cmd = KetNoi.TaoLenh("dbo.TimKiemSinhVien", conn))
             {
-                cmd.Parameters.AddWithValue("@TuKhoa", string.IsNullOrWhiteSpace(tuKhoa) ? (object)DBNull.Value : tuKhoa.Trim());
+                cmd.Parameters.Add(TaoTuKhoa(tuKhoa));
                 cmd.Parameters.AddWithValue("@MaLop", string.IsNullOrEmpty(maLop) ? (object)DBNull.Value : maLop);
                 conn.Open();
                 using (var r = cmd.ExecuteReader())
@@ -47,8 +47,14 @@ namespace QLSV.Core.Data
             }
         }
 
-        public void Them(SinhVien sv) => ExecSv("dbo.ThemSinhVien", sv);
-        public void CapNhat(SinhVien sv) => ExecSv("dbo.CapNhatSinhVien", sv);
+        public void Them(SinhVien sv)
+        {
+            ExecSv("dbo.ThemSinhVien", sv);
+        }
+        public void CapNhat(SinhVien sv)
+        {
+            ExecSv("dbo.CapNhatSinhVien", sv);
+        }
 
         public void Xoa(string maSv)
         {
@@ -111,6 +117,13 @@ namespace QLSV.Core.Data
                 conn.Open();
                 cmd.ExecuteNonQuery();
             }
+        }
+
+        private static SqlParameter TaoTuKhoa(string tuKhoa)
+        {
+            var p = new SqlParameter("@TuKhoa", SqlDbType.NVarChar, 100);
+            p.Value = string.IsNullOrWhiteSpace(tuKhoa) ? (object)DBNull.Value : tuKhoa.Trim();
+            return p;
         }
 
         private static SinhVien MapSinhVien(SqlDataReader r) => new SinhVien

@@ -14,12 +14,19 @@ namespace QLSV.Core.Data
             using (var conn = KetNoi.MoKetNoi())
             using (var cmd = KetNoi.TaoLenh("dbo.LayDanhSachMonHoc", conn))
             {
-                cmd.Parameters.AddWithValue("@TuKhoa", string.IsNullOrWhiteSpace(tuKhoa) ? (object)DBNull.Value : tuKhoa.Trim());
+                cmd.Parameters.Add(TaoTuKhoa(tuKhoa));
                 conn.Open();
                 using (var r = cmd.ExecuteReader())
                     while (r.Read()) list.Add(Map(r));
             }
             return list;
+        }
+
+        private static SqlParameter TaoTuKhoa(string tuKhoa)
+        {
+            var p = new SqlParameter("@TuKhoa", SqlDbType.NVarChar, 100);
+            p.Value = string.IsNullOrWhiteSpace(tuKhoa) ? (object)DBNull.Value : tuKhoa.Trim();
+            return p;
         }
 
         public MonHoc LayChiTiet(string maMh)

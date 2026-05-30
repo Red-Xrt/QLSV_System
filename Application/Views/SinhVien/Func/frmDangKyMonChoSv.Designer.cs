@@ -25,7 +25,7 @@ namespace QLSV.App.Views
             this.lblHuongDan.Font = new System.Drawing.Font("Segoe UI", 10F);
             this.lblHuongDan.Location = new System.Drawing.Point(24, 22);
             this.lblHuongDan.Name = "lblHuongDan";
-            this.lblHuongDan.Size = new System.Drawing.Size(196, 23);
+            this.lblHuongDan.Size = new System.Drawing.Size(221, 23);
             this.lblHuongDan.TabIndex = 0;
             this.lblHuongDan.Text = "Chọn môn (học kỳ hiện tại):";
             // 
@@ -84,6 +84,7 @@ namespace QLSV.App.Views
             this.Load += new System.EventHandler(this.frmDangKyMonChoSv_Load);
             this.ResumeLayout(false);
             this.PerformLayout();
+
         }
 
         private System.Windows.Forms.Label lblHuongDan;

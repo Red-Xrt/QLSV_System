@@ -15,9 +15,19 @@ namespace QLSV.App.Views
         public frmMonHoc()
         {
             InitializeComponent();
+            txtTimKiem.KeyDown += TimKiemEnter;
             GridHelper.DamBaoCotCheckbox(dataGridView1, CotChon);
             GridHelper.GanSuKienCheckbox(dataGridView1, CapNhatDem, CotChon);
             chỉnhSửaToolStripMenuItem.Text = "Chỉnh sửa";
+        }
+
+        private void TimKiemEnter(object sender, KeyEventArgs e)
+        {
+            if (e.KeyCode == Keys.Enter)
+            {
+                e.SuppressKeyPress = true;
+                NapDuLieu();
+            }
         }
 
         private void frmMonHoc_Load(object sender, EventArgs e)

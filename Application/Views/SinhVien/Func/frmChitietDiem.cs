@@ -33,9 +33,9 @@ namespace QLSV.App.Views
                 : "Kỳ: chưa xác định";
             if (_kqGoc != null)
             {
-                txtDiemQuaTrinh.Text = _kqGoc.DiemQuaTrinh?.ToString() ?? "0";
-                txtDiemGiuaKi.Text = _kqGoc.DiemGiuaKi?.ToString() ?? "0";
-                txtDiemThi.Text = _kqGoc.DiemCuoiKi?.ToString() ?? "0";
+                txtDiemQuaTrinh.Text = _kqGoc.DiemQuaTrinh?.ToString() ?? "";
+                txtDiemGiuaKi.Text = _kqGoc.DiemGiuaKi?.ToString() ?? "";
+                txtDiemThi.Text = _kqGoc.DiemCuoiKi?.ToString() ?? "";
             }
             KiemTraTrangThaiSua();
             CapNhatTong();
@@ -92,13 +92,15 @@ namespace QLSV.App.Views
 
         private void CapNhatTong()
         {
-            if (ValidationHelper.TryDiem(txtDiemQuaTrinh.Text, out var qt, out _) &&
-                ValidationHelper.TryDiem(txtDiemGiuaKi.Text, out var gk, out _) &&
-                ValidationHelper.TryDiem(txtDiemThi.Text, out var ck, out _))
+            if (!ValidationHelper.TryDiem(txtDiemQuaTrinh.Text, out var qt, out _) ||
+                !ValidationHelper.TryDiem(txtDiemGiuaKi.Text, out var gk, out _) ||
+                !ValidationHelper.TryDiem(txtDiemThi.Text, out var ck, out _))
             {
-                var tong = _bll.TinhTong(qt, gk, ck);
-                lblDiemTong.Text = $"TỔNG KẾT: {tong:0.0} ({(tong >= 5 ? "Đậu" : "Rớt")})";
+                lblDiemTong.Text = "TỔNG KẾT: — (chưa nhập đủ điểm)";
+                return;
             }
+            var tong = _bll.TinhTong(qt, gk, ck);
+            lblDiemTong.Text = $"TỔNG KẾT: {tong:0.0} ({(tong >= 5 ? "Đậu" : "Rớt")})";
         }
 
         private void btnLuu_Click(object sender, EventArgs e)

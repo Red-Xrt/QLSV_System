@@ -48,7 +48,6 @@ namespace QLSV.Core.Services
             _db.Xoa(maSv.Trim());
         }
 
-        /// <summary>Cập nhật lớp / giới tính cho nhiều SV (giữ nguyên các trường khác).</summary>
         public List<DangKyKetQua> CapNhatHangLoat(
             IReadOnlyList<string> danhSachMa,
             string maLopMoi,
